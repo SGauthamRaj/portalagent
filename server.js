@@ -26,6 +26,13 @@ const RP_CONFIG = {
     project: process.env.RP_PROJECT || 'staging_suites'
 };
 
+// REST API Reports Portal Configuration (Basic Auth)
+const REST_REPORTS_CONFIG = {
+    host: process.env.REST_REPORTS_HOST || 'reporting-portal.qa.staging.integrator.io',
+    username: process.env.REST_REPORTS_USER || 'portal_user',
+    password: process.env.REST_REPORTS_PASS || 'celigo@123'
+};
+
 // Validate configuration
 if (!RP_CONFIG.token) {
     console.error('\n⚠️  Warning: RP_TOKEN environment variable is not set!');
@@ -84,6 +91,53 @@ function proxyToReportPortal(apiPath, res) {
     proxyReq.end();
 }
 
+// Proxy request to REST API Reports Portal (Basic Auth)
+function proxyToRestReports(reqPath, res) {
+    const basicAuth = Buffer.from(`${REST_REPORTS_CONFIG.username}:${REST_REPORTS_CONFIG.password}`).toString('base64');
+    
+    const options = {
+        hostname: REST_REPORTS_CONFIG.host,
+        port: 443,
+        path: reqPath,
+        method: 'GET',
+        headers: {
+            'Authorization': `Basic ${basicAuth}`,
+            'Accept': 'text/html,application/json,*/*'
+        },
+        rejectUnauthorized: false
+    };
+
+    const proxyReq = https.request(options, (proxyRes) => {
+        let data = [];
+        
+        proxyRes.on('data', chunk => {
+            data.push(chunk);
+        });
+        
+        proxyRes.on('end', () => {
+            const buffer = Buffer.concat(data);
+            const contentType = proxyRes.headers['content-type'] || 'text/html';
+            
+            res.writeHead(proxyRes.statusCode, {
+                'Content-Type': contentType,
+                'Access-Control-Allow-Origin': '*',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            });
+            res.end(buffer);
+        });
+    });
+
+    proxyReq.on('error', (error) => {
+        console.error('REST Reports Proxy error:', error);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: error.message }));
+    });
+
+    proxyReq.end();
+}
+
 // Create server
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
@@ -100,10 +154,18 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // API Proxy
+    // API Proxy for ReportPortal
     if (pathname.startsWith('/api/')) {
         const apiPath = pathname + (parsedUrl.search || '');
         proxyToReportPortal(apiPath, res);
+        return;
+    }
+
+    // REST API Reports Proxy (Basic Auth portal)
+    if (pathname.startsWith('/rest-reports/')) {
+        // Remove the /rest-reports prefix and proxy to the portal
+        const restPath = pathname.replace('/rest-reports', '') + (parsedUrl.search || '');
+        proxyToRestReports(restPath || '/', res);
         return;
     }
 
@@ -140,6 +202,7 @@ server.listen(PORT, () => {
     console.log(`║   🌐 URL: http://localhost:${PORT}                                ║`);
     console.log(`║   📡 ReportPortal: ${RP_CONFIG.host.substring(0, 35).padEnd(35)}  ║`);
     console.log(`║   📁 Project: ${RP_CONFIG.project.padEnd(40)}  ║`);
+    console.log(`║   🔗 REST Reports: ${REST_REPORTS_CONFIG.host.substring(0, 35).padEnd(35)}  ║`);
     console.log('║                                                                ║');
     console.log('║   Press Ctrl+C to stop                                         ║');
     console.log('║                                                                ║');
