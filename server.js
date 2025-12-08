@@ -28,15 +28,20 @@ const RP_CONFIG = {
 
 // REST API Reports Portal Configuration (Basic Auth)
 const REST_REPORTS_CONFIG = {
-    host: process.env.REST_REPORTS_HOST || 'reporting-portal.qa.staging.integrator.io',
-    username: process.env.REST_REPORTS_USER || 'portal_user',
-    password: process.env.REST_REPORTS_PASS || 'celigo@123'
+    host: process.env.REST_REPORTS_HOST || '',
+    username: process.env.REST_REPORTS_USER || '',
+    password: process.env.REST_REPORTS_PASS || ''
 };
 
 // Validate configuration
 if (!RP_CONFIG.token) {
     console.error('\n⚠️  Warning: RP_TOKEN environment variable is not set!');
     console.error('   Set it using: export RP_TOKEN=your-api-token\n');
+}
+
+if (!REST_REPORTS_CONFIG.host || !REST_REPORTS_CONFIG.username || !REST_REPORTS_CONFIG.password) {
+    console.error('\n⚠️  Warning: REST API Reports credentials are not fully configured!');
+    console.error('   Set REST_REPORTS_HOST, REST_REPORTS_USER, and REST_REPORTS_PASS in .env\n');
 }
 
 // MIME types
