@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReportPortal Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #131920;
+            --bg-tertiary: #1a2130;
+            --bg-card: #161d27;
+            --accent-cyan: #00e5ff;
+            --accent-green: #00ff9d;
+            --accent-red: #ff4757;
+            --accent-orange: #ffa502;
+            --accent-purple: #a855f7;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --border-color: #2d3748;
+            --glow-cyan: 0 0 20px rgba(0, 229, 255, 0.3);
+            --glow-green: 0 0 20px rgba(0, 255, 157, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(ellipse at top left, rgba(0, 229, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: var(--glow-cyan);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        .controls-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 1.5rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        select, .search-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            font-family: inherit;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+        }
+
+        select:hover, .search-input:hover {
+            border-color: var(--accent-cyan);
+        }
+
+        select:focus, .search-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
+
+        select optgroup {
+            background: var(--bg-secondary);
+            color: var(--accent-cyan);
+            font-weight: 600;
+            padding: 0.5rem;
+        }
+
+        select option {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 0.75rem;
+        }
+
+        select option:hover {
+            background: rgba(0, 229, 255, 0.15);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-passed {
+            background: rgba(0, 255, 157, 0.15);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .status-failed {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value.passed { color: var(--accent-green); }
+        .stat-value.failed { color: var(--accent-red); }
+        .stat-value.total { color: var(--accent-cyan); }
+        .stat-value.duration { color: var(--accent-orange); }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .meta-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+        }
+
+        .failed-tests-section {
+            margin-top: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-red);
+        }
+
+        .failed-tests-list {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .failed-test-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .failed-test-item:last-child {
+            border-bottom: none;
+        }
+
+        .failed-test-item:hover {
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        .test-number {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--accent-red);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .test-name {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .link-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 8px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .link-button:hover {
+            background: rgba(0, 229, 255, 0.2);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        @media (max-width: 1024px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .meta-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            border-color: var(--accent-red);
+        }
+
+        .toast.success {
+            border-color: var(--accent-green);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">📊</div>
+                <h1>ReportPortal Agent</h1>
+            </div>
+            <p class="subtitle">Intelligent Test Report Analytics Dashboard</p>
+        </header>
+
+        <div class="controls-panel">
+            <div class="controls-grid">
+                <div class="form-group">
+                    <label>Environment</label>
+                    <div class="select-wrapper">
+                        <select id="environment">
+                            <option value="staging_suites">QA Staging</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Test Suite</label>
+                    <div class="select-wrapper">
+                        <select id="suiteSelect">
+                            <option value="">-- Select a Test Suite --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-primary" id="fetchBtn" disabled>
+                        <span>🔍</span> Get Latest Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-panel">
+            <div id="emptyState" class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <h3>Select a Test Suite</h3>
+                <p>Choose an environment and test suite to view the latest report</p>
+            </div>
+
+            <div id="loadingState" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Fetching latest report...</p>
+            </div>
+
+            <div id="resultsContent" class="hidden">
+                <div class="results-header">
+                    <div class="results-title">
+                        <span id="suiteName">-</span>
+                    </div>
+                    <div id="statusBadge" class="status-badge">-</div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value total" id="totalTests">0</div>
+                        <div class="stat-label">Total Tests</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value passed" id="passedTests">0</div>
+                        <div class="stat-label">Passed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value failed" id="failedTests">0</div>
+                        <div class="stat-label">Failed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value duration" id="duration">0m</div>
+                        <div class="stat-label">Duration</div>
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                </div>
+
+                <div class="meta-info">
+                    <div class="meta-item">
+                        <span class="meta-label">Launch ID</span>
+                        <span class="meta-value" id="launchId">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Run Number</span>
+                        <span class="meta-value" id="runNumber">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Build Date</span>
+                        <span class="meta-value" id="buildDate">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Owner</span>
+                        <span class="meta-value" id="owner">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Platform</span>
+                        <span class="meta-value" id="platform">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Actions</span>
+                        <a href="#" class="link-button" id="reportLink" target="_blank">
+                            🔗 View in ReportPortal
+                        </a>
+                    </div>
+                </div>
+
+                <div class="failed-tests-section" id="failedTestsSection">
+                    <h3 class="section-title">
+                        <span>❌</span> Failed Test Cases
+                    </h3>
+                    <div class="failed-tests-list" id="failedTestsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <span id="toastIcon">⚠️</span>
+        <span id="toastMessage">Message</span>
+    </div>
+
+    <script>
+        // Configuration - Uses local proxy to avoid CORS
+        const CONFIG = {
+            RP_HOST: window.location.origin, // Uses local proxy server
+            RP_TOKEN: 'Key-MCP-Server_OtfOrsyyT1amSoUkPKaXnhwGGlajtgfvUHSP80bQuRKC9HEqyig_rvNHdX9U8evo',
+            RP_PROJECT: 'staging_suites',
+            RP_DIRECT: 'https://reportportal.qa.staging.integrator.io' // For direct links
+        };
+
+        // State
+        let allSuites = [];
+        let selectedSuite = null;
+
+        // DOM Elements
+        const suiteSelect = document.getElementById('suiteSelect');
+        const fetchBtn = document.getElementById('fetchBtn');
+        const emptyState = document.getElementById('emptyState');
+        const loadingState = document.getElementById('loadingState');
+        const resultsContent = document.getElementById('resultsContent');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadSuites();
+            setupEventListeners();
+        });
+
+        // Load all suites from ReportPortal
+        async function loadSuites() {
+            showToast('Loading test suites...', 'info');
+            
+            try {
+                const suites = new Set();
+                let page = 1;
+                let totalPages = 1;
+
+                while (page <= totalPages) {
+                    const response = await fetch(
+                        `${CONFIG.RP_HOST}/api/v1/${CONFIG.RP_PROJECT}/launch?page.size=300&page.page=${page}`
+                    );
+
+                    if (!response.ok) throw new Error('Failed to fetch suites');
+
+                    const data = await response.json();
+                    totalPages = data.page.totalPages;
+
+                    data.content.forEach(launch => {
+                        suites.add(launch.name);
+                    });
+
+                    page++;
+                }
+
+                allSuites = Array.from(suites).sort();
+                showToast(`Loaded ${allSuites.length} test suites`, 'success');
+                renderDropdown(allSuites);
+
+            } catch (error) {
+                console.error('Error loading suites:', error);
+                showToast('Failed to load test suites', 'error');
+            }
+        }
+
+        // Render dropdown items
+        function renderDropdown(suites) {
+            // Group suites by category
+            const grouped = {};
+            suites.forEach(suite => {
+                const category = getCategory(suite);
+                if (!grouped[category]) grouped[category] = [];
+                grouped[category].push(suite);
+            });
+
+            // Build select options with optgroups
+            let html = '<option value="">-- Select a Test Suite --</option>';
+            
+            Object.keys(grouped).sort().forEach(category => {
+                html += `<optgroup label="${category}">`;
+                grouped[category].forEach(suite => {
+                    const shortName = suite
+                        .replace('PLATFORM_UI_AUTOMATION_', '')
+                        .replace(/^PLATFORM_API_[A-Z-]+_/, '');
+                    html += `<option value="${suite}">${shortName}</option>`;
+                });
+                html += '</optgroup>';
+            });
+
+            suiteSelect.innerHTML = html;
+        }
+
+        // Get category from suite name
+        function getCategory(name) {
+            if (name.startsWith('PLATFORM_UI_AUTOMATION')) return 'UI Automation';
+            if (name.startsWith('PLATFORM_API_')) {
+                const parts = name.split('_');
+                return parts.length >= 3 ? `API - ${parts[2]}` : 'API';
+            }
+            if (name.startsWith('IA_API_')) return 'IA API';
+            return 'Other';
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Suite selection
+            suiteSelect.addEventListener('change', (e) => {
+                selectedSuite = e.target.value;
+                fetchBtn.disabled = !selectedSuite;
+                
+                // Auto-fetch when suite is selected
+                if (selectedSuite) {
+                    fetchLatestReport();
+                }
+            });
+
+            // Fetch button
+            fetchBtn.addEventListener('click', fetchLatestReport);
+        }
+
+        // Fetch latest report
+        async function fetchLatestReport() {
+            if (!selectedSuite) return;
+
+            showLoading();
+
+            try {
+                // Get latest launch
+                const launchResponse = await fetch(
+                    `${CONFIG.RP_HOST}/api/v1/${CONFIG.RP_PROJECT}/launch?filter.eq.name=${encodeURIComponent(selectedSuite)}&page.size=1&page.sort=startTime,desc`
+                );
+
+                if (!launchResponse.ok) throw new Error('Failed to fetch launch');
+
+                const launchData = await launchResponse.json();
+                
+                if (!launchData.content.length) {
+                    showToast('No launches found for this suite', 'error');
+                    showEmpty();
+                    return;
+                }
+
+                const launch = launchData.content[0];
+
+                // Get failed tests
+                const failedResponse = await fetch(
+                    `${CONFIG.RP_HOST}/api/v1/${CONFIG.RP_PROJECT}/item?filter.eq.launchId=${launch.id}&filter.eq.status=FAILED&page.size=50`
+                );
+
+                const failedData = await failedResponse.json();
+                const failedTests = failedData.content.filter(item => item.type === 'STEP');
+
+                displayResults(launch, failedTests);
+
+            } catch (error) {
+                console.error('Error fetching report:', error);
+                showToast('Failed to fetch report', 'error');
+                showEmpty();
+            }
+        }
+
+        // Display results
+        function displayResults(launch, failedTests) {
+            const stats = launch.statistics.executions;
+            const total = stats.total || 0;
+            const passed = stats.passed || 0;
+            const failed = stats.failed || 0;
+            const passRate = total > 0 ? (passed / total * 100).toFixed(1) : 0;
+
+            // Update UI
+            document.getElementById('suiteName').textContent = launch.name;
+            
+            const statusBadge = document.getElementById('statusBadge');
+            statusBadge.textContent = launch.status;
+            statusBadge.className = `status-badge status-${launch.status.toLowerCase()}`;
+
+            document.getElementById('totalTests').textContent = total;
+            document.getElementById('passedTests').textContent = passed;
+            document.getElementById('failedTests').textContent = failed;
+            
+            const durationMins = Math.round(launch.approximateDuration / 60);
+            document.getElementById('duration').textContent = `${durationMins}m`;
+
+            document.getElementById('progressBar').style.width = `${passRate}%`;
+
+            document.getElementById('launchId').textContent = launch.id;
+            document.getElementById('runNumber').textContent = `#${launch.number}`;
+            
+            const buildAttr = launch.attributes?.find(a => a.key === 'Build');
+            document.getElementById('buildDate').textContent = buildAttr?.value || 'N/A';
+            
+            document.getElementById('owner').textContent = launch.owner || 'N/A';
+            
+            const platformAttr = launch.attributes?.find(a => a.key === 'Platform');
+            document.getElementById('platform').textContent = platformAttr?.value || 'N/A';
+
+            document.getElementById('reportLink').href = 
+                `${CONFIG.RP_DIRECT}/ui/#${CONFIG.RP_PROJECT}/launches/all/${launch.id}`;
+
+            // Failed tests
+            const failedSection = document.getElementById('failedTestsSection');
+            const failedList = document.getElementById('failedTestsList');
+
+            if (failedTests.length > 0) {
+                failedSection.classList.remove('hidden');
+                failedList.innerHTML = failedTests.map((test, i) => `
+                    <div class="failed-test-item">
+                        <div class="test-number">${i + 1}</div>
+                        <div class="test-name">${test.name}</div>
+                    </div>
+                `).join('');
+            } else {
+                failedSection.classList.add('hidden');
+            }
+
+            showResults();
+        }
+
+        // UI State helpers
+        function showLoading() {
+            emptyState.classList.add('hidden');
+            resultsContent.classList.add('hidden');
+            loadingState.classList.remove('hidden');
+        }
+
+        function showResults() {
+            emptyState.classList.add('hidden');
+            loadingState.classList.add('hidden');
+            resultsContent.classList.remove('hidden');
+        }
+
+        function showEmpty() {
+            loadingState.classList.add('hidden');
+            resultsContent.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastMessage = document.getElementById('toastMessage');
+
+            toastMessage.textContent = message;
+            toast.className = `toast ${type}`;
+            
+            if (type === 'error') toastIcon.textContent = '❌';
+            else if (type === 'success') toastIcon.textContent = '✅';
+            else toastIcon.textContent = 'ℹ️';
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+
