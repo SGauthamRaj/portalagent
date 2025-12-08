@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReportPortal Live Dashboard</title>
+    <title>ReportPortal Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,12 +17,14 @@
             --accent-red: #ff3860;
             --accent-yellow: #ffdd00;
             --accent-purple: #bd00ff;
+            --accent-orange: #ff9500;
             --text-primary: #ffffff;
             --text-secondary: #7a8599;
             --border: #1e2433;
             --glow-cyan: 0 0 30px rgba(0, 240, 255, 0.4);
             --glow-green: 0 0 30px rgba(0, 255, 136, 0.4);
             --glow-red: 0 0 30px rgba(255, 56, 96, 0.4);
+            --glow-purple: 0 0 30px rgba(189, 0, 255, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,7 +37,6 @@
             overflow-x: hidden;
         }
 
-        /* Animated background */
         .bg-grid {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -56,9 +57,9 @@
         .container {
             position: relative;
             z-index: 1;
-            max-width: 1800px;
+            max-width: 1900px;
             margin: 0 auto;
-            padding: 1.5rem;
+            padding: 1rem;
         }
 
         /* Header */
@@ -66,9 +67,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 0 2rem;
+            padding: 0.75rem 0 1rem;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .logo {
@@ -78,11 +79,11 @@
         }
 
         .logo-icon {
-            width: 50px; height: 50px;
+            width: 45px; height: 45px;
             background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
             border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
+            font-size: 22px;
             box-shadow: var(--glow-cyan);
             animation: pulse 2s ease-in-out infinite;
         }
@@ -94,7 +95,7 @@
 
         h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
             -webkit-background-clip: text;
@@ -103,109 +104,134 @@
             letter-spacing: 2px;
         }
 
-        .live-indicator {
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            padding: 0.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.5rem;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--accent-green);
-            border-radius: 30px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            color: var(--accent-green);
+            gap: 0.5rem;
         }
 
-        .live-dot {
-            width: 10px; height: 10px;
-            background: var(--accent-green);
-            border-radius: 50%;
-            animation: blink 1s ease-in-out infinite;
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
         }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; box-shadow: var(--glow-green); }
-            50% { opacity: 0.3; box-shadow: none; }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: var(--bg-dark);
+            box-shadow: var(--glow-cyan);
         }
 
-        /* Stats Row */
-        .stats-row {
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Suite Report Styles */
+        .main-controls {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-box {
+            grid-template-columns: 1fr 2fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
             background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
             padding: 1.5rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
         }
 
-        .stat-box::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-        }
-
-        .stat-box:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent-cyan);
-        }
-
-        .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .stat-value.updating {
-            animation: countUp 0.5s ease-out;
-        }
-
-        @keyframes countUp {
-            0% { transform: scale(1.2); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
         }
 
-        .stat-box.total .stat-value { color: var(--accent-cyan); }
-        .stat-box.passed .stat-value { color: var(--accent-green); }
-        .stat-box.failed .stat-value { color: var(--accent-red); }
-        .stat-box.running .stat-value { color: var(--accent-yellow); }
-        .stat-box.rate .stat-value { color: var(--accent-purple); }
-
-        /* Main Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
+        .form-group select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-hover);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
         }
 
-        /* Live Feed */
-        .live-feed {
+        .form-group select:hover { border-color: var(--accent-cyan); }
+        .form-group select:focus { outline: none; border-color: var(--accent-cyan); box-shadow: var(--glow-cyan); }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+            font-size: 0.7rem;
+        }
+
+        .btn-primary {
+            padding: 0.875rem 2rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border: none;
+            border-radius: 10px;
+            color: var(--bg-dark);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--glow-cyan); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Report Card */
+        .report-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 16px;
             overflow: hidden;
         }
 
-        .section-header {
+        .report-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -214,236 +240,570 @@
             background: rgba(0, 240, 255, 0.02);
         }
 
-        .section-title {
+        .report-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+        }
+
+        .status-badge.passed { background: rgba(0, 255, 136, 0.15); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .status-badge.failed { background: rgba(255, 56, 96, 0.15); color: var(--accent-red); border: 1px solid var(--accent-red); }
+
+        .report-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .report-stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-hover);
+            border-radius: 12px;
+        }
+
+        .report-stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .report-stat-value.total { color: var(--accent-cyan); }
+        .report-stat-value.passed { color: var(--accent-green); }
+        .report-stat-value.failed { color: var(--accent-red); }
+        .report-stat-value.duration { color: var(--accent-orange); }
+
+        .report-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        .report-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-hover);
+            margin: 0 1.5rem 1.5rem;
+            border-radius: 10px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .meta-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 6px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .link-btn:hover { background: rgba(0, 240, 255, 0.2); }
+
+        .failed-tests-panel {
+            margin: 0 1.5rem 1.5rem;
+            background: rgba(255, 56, 96, 0.05);
+            border: 1px solid rgba(255, 56, 96, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .failed-tests-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 56, 96, 0.2);
+            font-weight: 600;
+            color: var(--accent-red);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .failed-test-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .failed-test-item {
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
 
-        .refresh-timer {
-            font-family: 'JetBrains Mono', monospace;
+        .failed-test-num {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 56, 96, 0.2);
+            color: var(--accent-red);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .failed-test-name {
             font-size: 0.85rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
             color: var(--text-secondary);
         }
 
-        .feed-list {
-            max-height: 600px;
-            overflow-y: auto;
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
 
-        .feed-item {
+        .loading-state {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        @media (max-width: 1400px) {
+            .main-controls { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .main-controls { grid-template-columns: 1fr; }
+            .reports-grid { grid-template-columns: 1fr; }
+        }
+
+        .hidden { display: none !important; }
+
+        /* Date Picker Styles for Suite Report */
+        .date-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .date-picker-input {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            background: var(--bg-hover);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date-picker-input:hover { border-color: var(--accent-cyan); }
+        .date-picker-input:focus { outline: none; border-color: var(--accent-cyan); box-shadow: var(--glow-cyan); }
+
+        .date-picker-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .clear-date-btn-inline {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 56, 96, 0.2);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .clear-date-btn-inline:hover {
+            background: rgba(255, 56, 96, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Multiple Reports List */
+        .reports-list {
+            margin-top: 1.5rem;
+        }
+
+        .reports-list-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .reports-grid {
             display: grid;
-            grid-template-columns: auto 1fr auto auto;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        .report-card-mini {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .report-card-mini:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.1);
+        }
+
+        .report-card-mini.passed { border-left: 4px solid var(--accent-green); }
+        .report-card-mini.failed { border-left: 4px solid var(--accent-red); }
+        .report-card-mini.in_progress { border-left: 4px solid var(--accent-yellow); }
+
+        .report-card-mini-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .report-card-mini-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .report-card-mini-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .report-card-mini-status.passed { background: rgba(0, 255, 136, 0.15); color: var(--accent-green); }
+        .report-card-mini-status.failed { background: rgba(255, 56, 96, 0.15); color: var(--accent-red); }
+        .report-card-mini-status.in_progress { background: rgba(255, 221, 0, 0.15); color: var(--accent-yellow); }
+
+        .report-card-mini-stats {
+            display: flex;
+            gap: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-card-mini-stats .passed { color: var(--accent-green); }
+        .report-card-mini-stats .failed { color: var(--accent-red); }
+
+        .report-card-mini-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .no-results-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            background: var(--bg-hover);
+            border-radius: 12px;
+            border: 1px dashed var(--border);
+        }
+
+        /* REST API Reports Tab Styles */
+        .restapi-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .restapi-controls > .back-btn {
+            flex-shrink: 0;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-item {
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-hover);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb-item:hover {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--accent-cyan);
+        }
+
+        .breadcrumb-item.active {
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .restapi-filters {
+            display: flex;
             gap: 1rem;
             align-items: center;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            transition: all 0.3s ease;
-            animation: slideIn 0.5s ease-out;
+            flex-wrap: wrap;
         }
 
-        @keyframes slideIn {
-            0% { opacity: 0; transform: translateX(-20px); }
-            100% { opacity: 1; transform: translateX(0); }
+        .restapi-search {
+            flex: 1;
+            max-width: 400px;
         }
 
-        .feed-item:hover {
+        .date-filter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             background: var(--bg-hover);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--accent);
         }
 
-        .feed-item.new {
-            background: rgba(0, 240, 255, 0.05);
-            border-left: 3px solid var(--accent-cyan);
+        .date-filter.hidden {
+            display: none;
         }
 
-        .status-icon {
-            width: 40px; height: 40px;
+        .date-filter-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .date-input {
+            padding: 0.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .date-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .clear-date-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .clear-date-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-hover);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .restapi-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .restapi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .restapi-card {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .restapi-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.1);
+        }
+
+        .restapi-card.directory {
+            border-left: 3px solid var(--accent-purple);
+        }
+
+        .restapi-card.report {
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .restapi-card-icon {
+            width: 48px;
+            height: 48px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            flex-shrink: 0;
         }
 
-        .status-icon.passed { background: rgba(0, 255, 136, 0.15); }
-        .status-icon.failed { background: rgba(255, 56, 96, 0.15); }
-        .status-icon.running { background: rgba(255, 221, 0, 0.15); animation: spin 2s linear infinite; }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .restapi-card.directory .restapi-card-icon {
+            background: rgba(189, 0, 255, 0.15);
         }
 
-        .feed-info h4 {
-            font-size: 0.95rem;
+        .restapi-card.report .restapi-card-icon {
+            background: rgba(0, 255, 136, 0.15);
+        }
+
+        .restapi-card-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .restapi-card-name {
             font-weight: 600;
+            font-size: 0.9rem;
             margin-bottom: 0.25rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 400px;
         }
 
-        .feed-info span {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .feed-stats {
-            display: flex;
-            gap: 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-        }
-
-        .feed-stats .passed { color: var(--accent-green); }
-        .feed-stats .failed { color: var(--accent-red); }
-
-        .feed-time {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            white-space: nowrap;
-        }
-
-        /* Failed Tests Panel */
-        .failed-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        .failed-panel .section-header {
-            background: rgba(255, 56, 96, 0.05);
-            border-bottom-color: rgba(255, 56, 96, 0.3);
-        }
-
-        .failed-panel .section-title {
-            color: var(--accent-red);
-        }
-
-        .failed-list {
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .failed-item {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .failed-item:hover {
-            background: rgba(255, 56, 96, 0.05);
-        }
-
-        .failed-item h5 {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--accent-red);
-        }
-
-        .failed-item p {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .failed-item .suite-name {
-            font-family: 'JetBrains Mono', monospace;
+        .restapi-card-meta {
             font-size: 0.75rem;
-            color: var(--accent-cyan);
-            margin-top: 0.5rem;
+            color: var(--text-secondary);
         }
 
-        /* Progress Rings */
-        .progress-ring {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            padding: 2rem;
+        .restapi-report {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            margin-top: 1.5rem;
+            overflow: hidden;
         }
 
-        .ring-container {
-            text-align: center;
-        }
-
-        .ring {
-            width: 120px;
-            height: 120px;
-            position: relative;
-        }
-
-        .ring svg {
-            transform: rotate(-90deg);
-        }
-
-        .ring circle {
-            fill: none;
-            stroke-width: 8;
-        }
-
-        .ring .bg { stroke: var(--border); }
-        .ring .progress {
-            stroke-linecap: round;
-            transition: stroke-dashoffset 1s ease-out;
-        }
-
-        .ring .progress.green { stroke: var(--accent-green); filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5)); }
-        .ring .progress.red { stroke: var(--accent-red); filter: drop-shadow(0 0 10px rgba(255, 56, 96, 0.5)); }
-        .ring .progress.cyan { stroke: var(--accent-cyan); filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5)); }
-
-        .ring-value {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .ring-label {
-            margin-top: 0.75rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
-
-        /* Controls */
-        .controls {
+        .report-viewer-header {
             display: flex;
-            gap: 1rem;
+            justify-content: space-between;
             align-items: center;
+            padding: 1rem 1.5rem;
+            background: var(--bg-hover);
+            border-bottom: 1px solid var(--border);
         }
 
-        .control-btn {
+        .back-btn {
             padding: 0.5rem 1rem;
             background: transparent;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--text-secondary);
             font-family: inherit;
             font-size: 0.85rem;
@@ -451,26 +811,83 @@
             transition: all 0.3s ease;
         }
 
-        .control-btn:hover {
+        .back-btn:hover {
             border-color: var(--accent-cyan);
             color: var(--accent-cyan);
         }
 
-        .control-btn.active {
-            background: var(--accent-cyan);
-            border-color: var(--accent-cyan);
-            color: var(--bg-dark);
+        .report-frame {
+            width: 100%;
+            height: calc(100vh - 300px);
+            min-height: 500px;
+            border: none;
+            background: #fff;
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .main-grid { grid-template-columns: 1fr; }
-            .stats-row { grid-template-columns: repeat(3, 1fr); }
+        /* Recent reports section */
+        .recent-reports {
+            margin-top: 1.5rem;
         }
 
-        @media (max-width: 768px) {
-            .stats-row { grid-template-columns: repeat(2, 1fr); }
-            header { flex-direction: column; gap: 1rem; }
+        .recent-reports-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-orange);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .recent-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1rem;
+        }
+
+        .recent-item {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .recent-item:hover {
+            border-color: var(--accent-orange);
+            background: rgba(255, 149, 0, 0.05);
+        }
+
+        .recent-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 149, 0, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .recent-info h5 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.15rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 280px;
+        }
+
+        .recent-info span {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -481,102 +898,133 @@
         <header>
             <div class="logo">
                 <div class="logo-icon">📊</div>
-                <h1>Live Dashboard</h1>
-            </div>
-            <div class="controls">
-                <button class="control-btn active" data-interval="10">10s</button>
-                <button class="control-btn" data-interval="30">30s</button>
-                <button class="control-btn" data-interval="60">60s</button>
-            </div>
-            <div class="live-indicator">
-                <div class="live-dot"></div>
-                <span>LIVE</span>
-                <span id="lastUpdate">--:--:--</span>
+                <h1>ReportPortal</h1>
             </div>
         </header>
 
-        <div class="stats-row">
-            <div class="stat-box total">
-                <div class="stat-value" id="totalLaunches">0</div>
-                <div class="stat-label">Total Launches</div>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="main">
+                <span>🔍</span> Suite Report
+            </button>
+            <button class="tab-btn" data-tab="restapi">
+                <span>🗂️</span> REST API Reports
+            </button>
+        </div>
+
+        <!-- Suite Report Tab -->
+        <div class="tab-content active" id="mainTab">
+            <div class="main-controls">
+                <div class="form-group">
+                    <label>Environment</label>
+                    <div class="select-wrapper">
+                        <select id="envSelect">
+                            <option value="staging_suites">QA Staging</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Test Suite</label>
+                    <div class="select-wrapper">
+                        <select id="suiteSelect">
+                            <option value="">-- Select a Test Suite --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Filter by Date</label>
+                    <div class="date-picker-wrapper">
+                        <input type="date" id="suiteReportDateFilter" class="date-picker-input">
+                        <button id="clearSuiteDateFilter" class="clear-date-btn-inline" title="Clear date">✕</button>
+                    </div>
+                </div>
+                <button class="btn-primary" id="fetchReportBtn" disabled>
+                    <span>🔍</span> Get Report
+                </button>
             </div>
-            <div class="stat-box passed">
-                <div class="stat-value" id="passedCount">0</div>
-                <div class="stat-label">Passed</div>
+
+            <div id="mainEmptyState" class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <h3>Select a Test Suite</h3>
+                <p>Choose an environment, test suite, and optionally a date to view reports</p>
             </div>
-            <div class="stat-box failed">
-                <div class="stat-value" id="failedCount">0</div>
-                <div class="stat-label">Failed</div>
+
+            <div id="mainLoadingState" class="loading-state hidden">
+                <div class="spinner"></div>
+                <p>Fetching reports...</p>
             </div>
-            <div class="stat-box running">
-                <div class="stat-value" id="runningCount">0</div>
-                <div class="stat-label">In Progress</div>
+
+            <!-- Multiple Reports List (shown when date filter is active) -->
+            <div id="reportsListContainer" class="reports-list hidden">
+                <div class="reports-list-header">
+                    <span>📊</span> <span id="reportsListTitle">Reports</span>
+                </div>
+                <div class="reports-grid" id="reportsGrid"></div>
             </div>
-            <div class="stat-box rate">
-                <div class="stat-value" id="passRate">0%</div>
-                <div class="stat-label">Pass Rate</div>
+
+            <div id="mainReportCard" class="report-card hidden">
+                <div class="report-header">
+                    <button class="back-btn hidden" id="backToReportsList" style="margin-right: 1rem;">← Back to List</button>
+                    <div class="report-title" id="reportSuiteName">-</div>
+                    <div class="status-badge" id="reportStatus">-</div>
+                </div>
+                <div class="report-stats">
+                    <div class="report-stat"><div class="report-stat-value total" id="reportTotal">0</div><div class="report-stat-label">Total Tests</div></div>
+                    <div class="report-stat"><div class="report-stat-value passed" id="reportPassed">0</div><div class="report-stat-label">Passed</div></div>
+                    <div class="report-stat"><div class="report-stat-value failed" id="reportFailed">0</div><div class="report-stat-label">Failed</div></div>
+                    <div class="report-stat"><div class="report-stat-value duration" id="reportDuration">0m</div><div class="report-stat-label">Duration</div></div>
+                </div>
+                <div class="report-meta">
+                    <div class="meta-item"><span class="meta-label">Launch ID</span><span class="meta-value" id="reportLaunchId">-</span></div>
+                    <div class="meta-item"><span class="meta-label">Run Number</span><span class="meta-value" id="reportRunNumber">-</span></div>
+                    <div class="meta-item"><span class="meta-label">Build Date</span><span class="meta-value" id="reportBuildDate">-</span></div>
+                    <div class="meta-item"><span class="meta-label">Owner</span><span class="meta-value" id="reportOwner">-</span></div>
+                    <div class="meta-item"><span class="meta-label">Platform</span><span class="meta-value" id="reportPlatform">-</span></div>
+                    <div class="meta-item"><span class="meta-label">Actions</span><a href="#" class="link-btn" id="reportLink" target="_blank">🔗 View in ReportPortal</a></div>
+                </div>
+                <div class="failed-tests-panel hidden" id="reportFailedPanel">
+                    <div class="failed-tests-header"><span>❌</span> Failed Test Cases</div>
+                    <div class="failed-test-list" id="reportFailedList"></div>
+                </div>
             </div>
         </div>
 
-        <div class="main-grid">
-            <div class="live-feed">
-                <div class="section-header">
-                    <div class="section-title">
-                        <span>⚡</span> Recent Test Runs
-                    </div>
-                    <div class="refresh-timer">Next refresh: <span id="countdown">10</span>s</div>
+        <!-- REST API Reports Tab -->
+        <div class="tab-content" id="restapiTab">
+            <div class="restapi-controls">
+                <button class="back-btn hidden" id="restapiBackBtn">← Back</button>
+                <div class="breadcrumb" id="breadcrumb">
+                    <span class="breadcrumb-item" data-path="/">🏠 Home</span>
                 </div>
-                <div class="feed-list" id="feedList">
-                    <!-- Feed items will be inserted here -->
+                <div class="restapi-filters">
+                    <div class="restapi-search">
+                        <input type="text" id="restapiSearch" placeholder="🔍 Search projects..." class="search-input">
+                    </div>
+                    <div class="date-filter hidden" id="dateFilterContainer">
+                        <label class="date-filter-label">📅 Filter by Date:</label>
+                        <input type="date" id="dateFilter" class="date-input">
+                        <button id="clearDateFilter" class="clear-date-btn" title="Clear date filter">✕</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="failed-panel">
-                <div class="section-header">
-                    <div class="section-title">
-                        <span>❌</span> Recent Failures
-                    </div>
-                    <div class="refresh-timer" id="failedCount2">0 failures</div>
-                </div>
-                <div class="failed-list" id="failedList">
-                    <!-- Failed items will be inserted here -->
-                </div>
+            <div id="restapiLoading" class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading directories...</p>
             </div>
-        </div>
 
-        <div class="progress-ring">
-            <div class="ring-container">
-                <div class="ring">
-                    <svg width="120" height="120">
-                        <circle class="bg" cx="60" cy="60" r="52"></circle>
-                        <circle class="progress green" id="passRing" cx="60" cy="60" r="52" 
-                                stroke-dasharray="326.73" stroke-dashoffset="326.73"></circle>
-                    </svg>
-                    <div class="ring-value" id="passRingValue" style="color: var(--accent-green)">0%</div>
-                </div>
-                <div class="ring-label">Pass Rate</div>
+            <div id="restapiContent" class="restapi-content hidden">
+                <div class="restapi-grid" id="restapiGrid"></div>
             </div>
-            <div class="ring-container">
-                <div class="ring">
-                    <svg width="120" height="120">
-                        <circle class="bg" cx="60" cy="60" r="52"></circle>
-                        <circle class="progress red" id="failRing" cx="60" cy="60" r="52"
-                                stroke-dasharray="326.73" stroke-dashoffset="326.73"></circle>
-                    </svg>
-                    <div class="ring-value" id="failRingValue" style="color: var(--accent-red)">0%</div>
+
+            <div id="restapiReport" class="restapi-report hidden">
+                <div class="report-viewer">
+                    <div class="report-viewer-header">
+                        <button class="back-btn" id="backToList">← Back to List</button>
+                        <a href="#" id="openInNewTab" target="_blank" class="link-btn">🔗 Open Report</a>
+                    </div>
+                    <iframe id="reportFrame" class="report-frame"></iframe>
                 </div>
-                <div class="ring-label">Fail Rate</div>
-            </div>
-            <div class="ring-container">
-                <div class="ring">
-                    <svg width="120" height="120">
-                        <circle class="bg" cx="60" cy="60" r="52"></circle>
-                        <circle class="progress cyan" id="coverageRing" cx="60" cy="60" r="52"
-                                stroke-dasharray="326.73" stroke-dashoffset="326.73"></circle>
-                    </svg>
-                    <div class="ring-value" id="coverageValue" style="color: var(--accent-cyan)">0</div>
-                </div>
-                <div class="ring-label">Suites Today</div>
             </div>
         </div>
     </div>
@@ -588,190 +1036,418 @@
             RP_DIRECT: 'https://reportportal.qa.staging.integrator.io'
         };
 
-        let refreshInterval = 10;
-        let countdown = refreshInterval;
-        let countdownTimer = null;
-        let previousLaunches = [];
+        let allSuites = [];
+        let currentProject = 'staging_suites';
+        
+        // Cache suites per environment to avoid re-fetching
+        const suitesCache = {};
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            setupControls();
-            fetchData();
-            startCountdown();
+        document.addEventListener('DOMContentLoaded', async () => {
+            setupTabs();
+            await loadEnvironments();
+            await setupMainDashboard();
         });
 
-        // Setup refresh interval controls
-        function setupControls() {
-            document.querySelectorAll('.control-btn').forEach(btn => {
+        // Load available environments/projects (only QA, IAQA, Staging)
+        async function loadEnvironments() {
+            const envSelect = document.getElementById('envSelect');
+            
+            // Only these 3 environments
+            const environments = [
+                { value: 'staging_suites', name: 'Staging' },
+                { value: 'qa_suites', name: 'QA' },
+                { value: 'iaqa_suites', name: 'IAQA' }
+            ];
+            
+            envSelect.innerHTML = environments.map(env => {
+                const selected = env.value === currentProject ? 'selected' : '';
+                return `<option value="${env.value}" ${selected}>${env.name}</option>`;
+            }).join('');
+
+            // Handle environment change
+            envSelect.addEventListener('change', async () => {
+                currentProject = envSelect.value;
+                CONFIG.RP_PROJECT = currentProject;
+                await setupMainDashboard();
+            });
+        }
+
+        // Tab Navigation
+        function setupTabs() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                     btn.classList.add('active');
-                    refreshInterval = parseInt(btn.dataset.interval);
-                    countdown = refreshInterval;
+                    document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
                 });
             });
         }
 
-        // Start countdown timer
-        function startCountdown() {
-            countdownTimer = setInterval(() => {
-                countdown--;
-                document.getElementById('countdown').textContent = countdown;
-                
-                if (countdown <= 0) {
-                    countdown = refreshInterval;
-                    fetchData();
-                }
-            }, 1000);
-        }
+        // ==================== SUITE REPORT ====================
+        async function setupMainDashboard() {
+            const suiteSelect = document.getElementById('suiteSelect');
+            const fetchBtn = document.getElementById('fetchReportBtn');
+            const project = currentProject;
 
-        // Fetch data from ReportPortal
-        async function fetchData() {
+            console.log(`Setting up dashboard for project: ${project}`);
+
+            // Check cache first
+            if (suitesCache[project]) {
+                console.log(`Using cached suites for ${project}`);
+                renderSuiteDropdown(suitesCache[project], suiteSelect);
+                return;
+            }
+
+            // Show loading state
+            suiteSelect.innerHTML = '<option value="">⏳ Loading suites...</option>';
+            suiteSelect.disabled = true;
+            if (fetchBtn) fetchBtn.disabled = true;
+
             try {
-                // Get recent launches
-                const response = await fetch(
-                    `${CONFIG.RP_HOST}/api/v1/${CONFIG.RP_PROJECT}/launch?page.size=20&page.sort=startTime,desc`
+                const allSuiteNames = new Set();
+                
+                // Get first page to know total pages
+                const firstResponse = await fetch(
+                    `${CONFIG.RP_HOST}/api/v1/${project}/launch?page.size=300&page.page=1`
                 );
+                const firstPage = await firstResponse.json();
                 
-                if (!response.ok) throw new Error('Failed to fetch');
+                if (firstPage.errorCode) {
+                    throw new Error(firstPage.message || 'API Error');
+                }
                 
+                const totalPages = Math.min(firstPage.page.totalPages, 10); // Max 10 pages
+                firstPage.content.forEach(l => allSuiteNames.add(l.name));
+                console.log(`Project ${project}: ${firstPage.page.totalElements} launches, ${totalPages} pages to fetch`);
+
+                // Fetch remaining pages in parallel batches of 3
+                if (totalPages > 1) {
+                    for (let page = 2; page <= totalPages; page += 3) {
+                        const batch = [];
+                        for (let p = page; p < page + 3 && p <= totalPages; p++) {
+                            batch.push(
+                                fetch(`${CONFIG.RP_HOST}/api/v1/${project}/launch?page.size=300&page.page=${p}`)
+                                    .then(r => r.json())
+                            );
+                        }
+                        const results = await Promise.all(batch);
+                        results.forEach(data => {
+                            if (data.content) {
+                                data.content.forEach(l => allSuiteNames.add(l.name));
+                            }
+                        });
+                    }
+                }
+
+                const suiteNames = [...allSuiteNames].sort();
+                console.log(`Loaded ${suiteNames.length} unique suites for ${project}`);
+                
+                // Cache the results
+                suitesCache[project] = suiteNames;
+                
+                renderSuiteDropdown(suiteNames, suiteSelect);
+                
+            } catch (e) {
+                console.error(`Error loading suites for ${project}:`, e);
+                suiteSelect.innerHTML = `<option value="">Error: ${e.message}</option>`;
+            } finally {
+                suiteSelect.disabled = false;
+                if (fetchBtn) fetchBtn.disabled = true; // Keep disabled until suite selected
+            }
+
+            // Setup event listeners (only once)
+            if (!suiteSelect.hasAttribute('data-listeners-added')) {
+                suiteSelect.setAttribute('data-listeners-added', 'true');
+                
+                suiteSelect.addEventListener('change', () => {
+                    const btn = document.getElementById('fetchReportBtn');
+                    if (btn) btn.disabled = !suiteSelect.value;
+                    if (suiteSelect.value) fetchReport();
+                });
+
+                if (fetchBtn) {
+                    fetchBtn.addEventListener('click', fetchReport);
+                }
+
+                // Date filter listeners
+                const dateFilter = document.getElementById('suiteReportDateFilter');
+                const clearDateBtn = document.getElementById('clearSuiteDateFilter');
+                
+                if (dateFilter) {
+                    dateFilter.addEventListener('change', () => {
+                        if (suiteSelect.value) {
+                            fetchReport();
+                        }
+                    });
+                }
+
+                if (clearDateBtn) {
+                    clearDateBtn.addEventListener('click', () => {
+                        if (dateFilter) {
+                            dateFilter.value = '';
+                            // Clear cached list
+                            cachedReportsList = null;
+                            cachedDateFilter = null;
+                            cachedSuiteName = null;
+                            // Hide reports list and back button
+                            document.getElementById('reportsListContainer').classList.add('hidden');
+                            document.getElementById('backToReportsList').classList.add('hidden');
+                            if (suiteSelect.value) {
+                                fetchReport();
+                            }
+                        }
+                    });
+                }
+
+                // Back to reports list button
+                const backToListBtn = document.getElementById('backToReportsList');
+                if (backToListBtn) {
+                    backToListBtn.addEventListener('click', goBackToReportsList);
+                }
+            }
+        }
+
+        function renderSuiteDropdown(suiteNames, suiteSelect) {
+            // Group suites
+            const grouped = {};
+            suiteNames.forEach(name => {
+                const cat = name.includes('UI_AUTOMATION') ? 'UI Automation' : 
+                           name.startsWith('PLATFORM_API_') ? 'API Automation' : 
+                           name.startsWith('IA_API_') ? 'IA API' : 'Other';
+                if (!grouped[cat]) grouped[cat] = [];
+                grouped[cat].push(name);
+            });
+
+            let html = '<option value="">-- Select a Test Suite --</option>';
+            // Sort categories to put UI Automation first
+            const sortedCats = Object.keys(grouped).sort((a, b) => {
+                if (a === 'UI Automation') return -1;
+                if (b === 'UI Automation') return 1;
+                return a.localeCompare(b);
+            });
+            
+            sortedCats.forEach(cat => {
+                const count = grouped[cat].length;
+                html += `<optgroup label="${cat} (${count})">`;
+                grouped[cat].forEach(name => {
+                    const short = name
+                        .replace('PLATFORM_UI_AUTOMATION_', '')
+                        .replace('PLATFORM_API_', '')
+                        .replace('IA_API_', '')
+                        .replace(/_/g, ' ');
+                    html += `<option value="${name}">${short}</option>`;
+                });
+                html += '</optgroup>';
+            });
+            suiteSelect.innerHTML = html;
+        }
+
+        async function fetchReport() {
+            const suiteName = document.getElementById('suiteSelect').value;
+            const dateFilter = document.getElementById('suiteReportDateFilter').value;
+            if (!suiteName) return;
+
+            document.getElementById('mainEmptyState').classList.add('hidden');
+            document.getElementById('mainReportCard').classList.add('hidden');
+            document.getElementById('reportsListContainer').classList.add('hidden');
+            document.getElementById('mainLoadingState').classList.remove('hidden');
+
+            try {
+                // Build the API URL with optional date filter
+                let apiUrl = `${CONFIG.RP_HOST}/api/v1/${CONFIG.RP_PROJECT}/launch?filter.eq.name=${encodeURIComponent(suiteName)}&page.sort=startTime,desc`;
+                
+                if (dateFilter) {
+                    // Filter by date: get all reports from that day using gte and lte filters
+                    const startOfDay = new Date(dateFilter + 'T00:00:00');
+                    const endOfDay = new Date(dateFilter + 'T23:59:59.999');
+                    
+                    apiUrl += `&filter.gte.startTime=${startOfDay.getTime()}&filter.lte.startTime=${endOfDay.getTime()}&page.size=50`;
+                } else {
+                    // No date filter: get latest report only
+                    apiUrl += '&page.size=1';
+                }
+
+                const response = await fetch(apiUrl);
                 const data = await response.json();
-                const launches = data.content;
 
-                updateStats(launches);
-                updateFeed(launches);
-                await updateFailedTests(launches);
-                updateRings(launches);
-                updateLastUpdate();
+                if (!data.content || !data.content.length) {
+                    document.getElementById('mainLoadingState').classList.add('hidden');
+                    if (dateFilter) {
+                        // Show no results message for date filter
+                        const reportsGrid = document.getElementById('reportsGrid');
+                        reportsGrid.innerHTML = `
+                            <div class="no-results-message" style="grid-column: 1 / -1;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📭</div>
+                                <h4>No Reports Found</h4>
+                                <p>No test runs found for "${formatSuiteName(suiteName)}" on ${formatDateDisplay(dateFilter)}</p>
+                            </div>
+                        `;
+                        document.getElementById('reportsListTitle').textContent = `Reports for ${formatDateDisplay(dateFilter)}`;
+                        document.getElementById('reportsListContainer').classList.remove('hidden');
+                    } else {
+                    document.getElementById('mainEmptyState').classList.remove('hidden');
+                    }
+                    return;
+                }
 
-                previousLaunches = launches.map(l => l.id);
+                // If date filter is active, show multiple reports
+                if (dateFilter && data.content.length > 0) {
+                    renderMultipleReports(data.content, dateFilter, suiteName);
+                } else {
+                    // Show single report (latest) - clear cache since not from list
+                    cachedReportsList = null;
+                    cachedDateFilter = null;
+                    cachedSuiteName = null;
+                    document.getElementById('backToReportsList').classList.add('hidden');
+                    renderSingleReport(data.content[0]);
+                }
 
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            } catch (e) {
+                console.error('Error fetching report:', e);
+                document.getElementById('mainLoadingState').classList.add('hidden');
+                document.getElementById('mainEmptyState').classList.remove('hidden');
             }
         }
 
-        // Update statistics
-        function updateStats(launches) {
-            const stats = {
-                total: launches.length,
-                passed: launches.filter(l => l.status === 'PASSED').length,
-                failed: launches.filter(l => l.status === 'FAILED').length,
-                running: launches.filter(l => l.status === 'IN_PROGRESS').length
-            };
-
-            const passRate = stats.total > 0 
-                ? Math.round((stats.passed / stats.total) * 100) 
-                : 0;
-
-            animateValue('totalLaunches', stats.total);
-            animateValue('passedCount', stats.passed);
-            animateValue('failedCount', stats.failed);
-            animateValue('runningCount', stats.running);
-            document.getElementById('passRate').textContent = passRate + '%';
-        }
-
-        // Animate value change
-        function animateValue(id, value) {
-            const el = document.getElementById(id);
-            const current = parseInt(el.textContent) || 0;
+        function renderMultipleReports(launches, dateFilter, suiteName) {
+            const reportsGrid = document.getElementById('reportsGrid');
             
-            if (current !== value) {
-                el.textContent = value;
-                el.classList.add('updating');
-                setTimeout(() => el.classList.remove('updating'), 500);
-            }
-        }
-
-        // Update live feed
-        function updateFeed(launches) {
-            const feedList = document.getElementById('feedList');
+            // Cache the list for back navigation
+            cachedReportsList = launches;
+            cachedDateFilter = dateFilter;
+            cachedSuiteName = suiteName;
             
-            feedList.innerHTML = launches.map((launch, i) => {
-                const isNew = !previousLaunches.includes(launch.id);
+            // Hide back button when showing list
+            document.getElementById('backToReportsList').classList.add('hidden');
+            
+            document.getElementById('reportsListTitle').textContent = 
+                `${launches.length} Report${launches.length > 1 ? 's' : ''} for ${formatDateDisplay(dateFilter)}`;
+            
+            reportsGrid.innerHTML = launches.map(launch => {
                 const stats = launch.statistics?.executions || {};
-                const time = formatTime(launch.startTime);
+                const time = new Date(launch.startTime).toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: true 
+                });
+                const duration = Math.round((launch.approximateDuration || 0) / 60);
                 
                 return `
-                    <div class="feed-item ${isNew ? 'new' : ''}" style="animation-delay: ${i * 0.05}s">
-                        <div class="status-icon ${launch.status.toLowerCase()}">
-                            ${getStatusIcon(launch.status)}
+                    <div class="report-card-mini ${launch.status.toLowerCase()}" 
+                         data-launch-id="${launch.id}" 
+                         onclick="selectReport(${launch.id}, '${suiteName.replace(/'/g, "\\'")}')">
+                        <div class="report-card-mini-header">
+                            <div class="report-card-mini-title">
+                                <span>#${launch.number}</span>
+                            </div>
+                            <div class="report-card-mini-status ${launch.status.toLowerCase()}">${launch.status}</div>
                         </div>
-                        <div class="feed-info">
-                            <h4>${formatSuiteName(launch.name)}</h4>
-                            <span>#${launch.number} • ${launch.owner || 'Unknown'}</span>
-                        </div>
-                        <div class="feed-stats">
+                        <div class="report-card-mini-stats">
                             <span class="passed">✓ ${stats.passed || 0}</span>
                             <span class="failed">✗ ${stats.failed || 0}</span>
+                            <span style="color: var(--text-secondary)">Total: ${stats.total || 0}</span>
                         </div>
-                        <div class="feed-time">${time}</div>
+                        <div class="report-card-mini-meta">
+                            <span>🕐 ${time}</span>
+                            <span>⏱️ ${duration}m</span>
+                            <span>👤 ${launch.owner || 'Unknown'}</span>
+                        </div>
                     </div>
                 `;
             }).join('');
-        }
-
-        // Update failed tests panel
-        async function updateFailedTests(launches) {
-            const failedLaunches = launches.filter(l => l.status === 'FAILED').slice(0, 5);
-            const failedList = document.getElementById('failedList');
             
-            let failedItems = [];
+            document.getElementById('mainLoadingState').classList.add('hidden');
+            document.getElementById('reportsListContainer').classList.remove('hidden');
+        }
 
-            for (const launch of failedLaunches) {
-                try {
-                    const response = await fetch(
-                        `${CONFIG.RP_HOST}/api/v1/${CONFIG.RP_PROJECT}/item?filter.eq.launchId=${launch.id}&filter.eq.status=FAILED&page.size=3`
-                    );
-                    const data = await response.json();
-                    const tests = data.content.filter(i => i.type === 'STEP').slice(0, 2);
-                    
-                    tests.forEach(test => {
-                        failedItems.push({
-                            name: test.name,
-                            suite: launch.name,
-                            time: formatTime(launch.startTime)
-                        });
-                    });
-                } catch (e) { /* ignore */ }
+        let cachedReportsList = null;
+        let cachedDateFilter = null;
+        let cachedSuiteName = null;
+
+        async function selectReport(launchId, suiteName) {
+            document.getElementById('reportsListContainer').classList.add('hidden');
+            document.getElementById('mainLoadingState').classList.remove('hidden');
+            
+            try {
+                const response = await fetch(
+                    `${CONFIG.RP_HOST}/api/v1/${CONFIG.RP_PROJECT}/launch/${launchId}`
+                );
+                const launch = await response.json();
+                
+                // Show back button if we came from a list
+                const backBtn = document.getElementById('backToReportsList');
+                if (backBtn && cachedReportsList) {
+                    backBtn.classList.remove('hidden');
+                }
+                
+                renderSingleReport(launch);
+            } catch (e) {
+                console.error('Error fetching report details:', e);
+                document.getElementById('mainLoadingState').classList.add('hidden');
+                document.getElementById('reportsListContainer').classList.remove('hidden');
             }
-
-            document.getElementById('failedCount2').textContent = `${failedItems.length} failures`;
-
-            failedList.innerHTML = failedItems.slice(0, 10).map(item => `
-                <div class="failed-item">
-                    <h5>${item.name.substring(0, 80)}${item.name.length > 80 ? '...' : ''}</h5>
-                    <div class="suite-name">${formatSuiteName(item.suite)} • ${item.time}</div>
-                </div>
-            `).join('');
         }
 
-        // Update progress rings
-        function updateRings(launches) {
-            const total = launches.length;
-            const passed = launches.filter(l => l.status === 'PASSED').length;
-            const failed = launches.filter(l => l.status === 'FAILED').length;
-
-            const passRate = total > 0 ? (passed / total) * 100 : 0;
-            const failRate = total > 0 ? (failed / total) * 100 : 0;
-
-            setRingProgress('passRing', passRate);
-            setRingProgress('failRing', failRate);
-            setRingProgress('coverageRing', Math.min(total * 5, 100));
-
-            document.getElementById('passRingValue').textContent = Math.round(passRate) + '%';
-            document.getElementById('failRingValue').textContent = Math.round(failRate) + '%';
-            document.getElementById('coverageValue').textContent = total;
+        function goBackToReportsList() {
+            if (cachedReportsList && cachedDateFilter && cachedSuiteName) {
+                document.getElementById('mainReportCard').classList.add('hidden');
+                document.getElementById('backToReportsList').classList.add('hidden');
+                renderMultipleReports(cachedReportsList, cachedDateFilter, cachedSuiteName);
+            }
         }
 
-        function setRingProgress(id, percentage) {
-            const ring = document.getElementById(id);
-            const circumference = 326.73;
-            const offset = circumference - (percentage / 100) * circumference;
-            ring.style.strokeDashoffset = offset;
+        async function renderSingleReport(launch) {
+                const stats = launch.statistics?.executions || {};
+
+                document.getElementById('reportSuiteName').textContent = launch.name;
+                document.getElementById('reportStatus').textContent = launch.status;
+                document.getElementById('reportStatus').className = `status-badge ${launch.status.toLowerCase()}`;
+                document.getElementById('reportTotal').textContent = stats.total || 0;
+                document.getElementById('reportPassed').textContent = stats.passed || 0;
+                document.getElementById('reportFailed').textContent = stats.failed || 0;
+            document.getElementById('reportDuration').textContent = Math.round((launch.approximateDuration || 0) / 60) + 'm';
+                document.getElementById('reportLaunchId').textContent = launch.id;
+                document.getElementById('reportRunNumber').textContent = '#' + launch.number;
+                document.getElementById('reportBuildDate').textContent = launch.attributes?.find(a => a.key === 'Build')?.value || 'N/A';
+                document.getElementById('reportOwner').textContent = launch.owner || 'N/A';
+                document.getElementById('reportPlatform').textContent = launch.attributes?.find(a => a.key === 'Platform')?.value || 'N/A';
+                document.getElementById('reportLink').href = `${CONFIG.RP_DIRECT}/ui/#${CONFIG.RP_PROJECT}/launches/all/${launch.id}`;
+
+                // Failed tests
+                if (stats.failed > 0) {
+                    const failedResponse = await fetch(
+                        `${CONFIG.RP_HOST}/api/v1/${CONFIG.RP_PROJECT}/item?filter.eq.launchId=${launch.id}&filter.eq.status=FAILED&page.size=20`
+                    );
+                    const failedData = await failedResponse.json();
+                    const failedTests = failedData.content.filter(i => i.type === 'STEP');
+
+                    document.getElementById('reportFailedList').innerHTML = failedTests.map((test, i) => `
+                        <div class="failed-test-item">
+                            <div class="failed-test-num">${i + 1}</div>
+                            <div class="failed-test-name">${test.name}</div>
+                        </div>
+                    `).join('');
+                    document.getElementById('reportFailedPanel').classList.remove('hidden');
+                } else {
+                    document.getElementById('reportFailedPanel').classList.add('hidden');
+                }
+
+                document.getElementById('mainLoadingState').classList.add('hidden');
+                document.getElementById('mainReportCard').classList.remove('hidden');
         }
 
-        // Helper functions
+        function formatDateDisplay(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+        }
+
+        // ==================== HELPERS ====================
         function getStatusIcon(status) {
             switch (status) {
                 case 'PASSED': return '✓';
@@ -783,29 +1459,393 @@
 
         function formatSuiteName(name) {
             return name
-                .replace('PLATFORM_UI_AUTOMATION_', 'UI: ')
-                .replace('PLATFORM_API_', 'API: ')
+                .replace('PLATFORM_UI_AUTOMATION_', '')
+                .replace('PLATFORM_API_', '')
                 .replace(/_AUTOMATION_TESTS_STAGING/g, '')
-                .replace(/_/g, ' ');
+                .replace(/_/g, ' ')
+                .substring(0, 40);
         }
 
         function formatTime(timestamp) {
             const date = new Date(timestamp);
             const now = new Date();
             const diff = Math.floor((now - date) / 1000 / 60);
-
             if (diff < 1) return 'Just now';
             if (diff < 60) return `${diff}m ago`;
             if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
             return date.toLocaleDateString();
         }
 
-        function updateLastUpdate() {
-            const now = new Date();
-            document.getElementById('lastUpdate').textContent = 
-                now.toLocaleTimeString('en-US', { hour12: false });
+        // ==================== REST API REPORTS ====================
+        const REST_REPORTS_CONFIG = {
+            baseUrl: window.location.origin + '/rest-reports',
+            directUrl: 'https://reporting-portal.qa.staging.integrator.io'
+        };
+
+        let currentPath = '/';
+        let allDirectories = [];
+        let isInEnvFolder = false;
+        let navigationHistory = []; // Track navigation history for back button
+        const ENV_FOLDERS = ['ci', 'qa', 'iaqa', 'staging', 'qaprod', 'cd'];
+
+        async function initRestApiReports() {
+            await fetchDirectory('/');
         }
+
+        async function fetchDirectory(path) {
+            const loading = document.getElementById('restapiLoading');
+            const content = document.getElementById('restapiContent');
+            const report = document.getElementById('restapiReport');
+            const searchInput = document.getElementById('restapiSearch');
+            const dateFilterContainer = document.getElementById('dateFilterContainer');
+            const dateFilter = document.getElementById('dateFilter');
+
+            // Clear search when navigating to a new folder
+            if (searchInput) {
+                searchInput.value = '';
+            }
+
+            // Clear date filter when navigating
+            if (dateFilter) {
+                dateFilter.value = '';
+            }
+
+            loading.classList.remove('hidden');
+            content.classList.add('hidden');
+            report.classList.add('hidden');
+
+            currentPath = path;
+            updateBreadcrumb(path);
+
+            // Check if we're navigating INTO an environment folder
+            const pathParts = path.split('/').filter(p => p);
+            const lastFolder = pathParts[pathParts.length - 1]?.toLowerCase();
+            isInEnvFolder = ENV_FOLDERS.includes(lastFolder);
+
+            // Show/hide date filter based on whether we're in an env folder
+            if (dateFilterContainer) {
+                if (isInEnvFolder) {
+                    dateFilterContainer.classList.remove('hidden');
+                } else {
+                    dateFilterContainer.classList.add('hidden');
+                }
+            }
+
+            try {
+                // Add cache-busting parameter to ensure fresh data
+                const cacheBuster = `_t=${Date.now()}`;
+                const response = await fetch(`${REST_REPORTS_CONFIG.baseUrl}/?path=/var/www/html${path === '/' ? '' : path}&${cacheBuster}`, {
+                    cache: 'no-store'
+                });
+                const html = await response.text();
+                
+                // Check if this is a report page (has Test Report heading) rather than directory listing
+                if (html.includes('<h1>Test Report</h1>') || html.includes('class="test-report"')) {
+                    // This is a report, show it in the viewer
+                    openReport(path);
+                    return;
+                }
+                
+                const directories = parseDirectoryListing(html, path);
+                allDirectories = directories;
+                
+                // If directory is empty but path contains a timestamp pattern, try to open as report
+                if (directories.length === 0 && /[A-Za-z]{3}_\d{2}_\d{4}/.test(path)) {
+                    openReport(path);
+                    return;
+                }
+                
+                renderDirectories(directories);
+
+                loading.classList.add('hidden');
+                content.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error fetching directory:', error);
+                loading.classList.add('hidden');
+                content.innerHTML = `<div class="empty-state"><p>Error loading directory: ${error.message}</p></div>`;
+                content.classList.remove('hidden');
+            }
+        }
+
+        function parseDirectoryListing(html, currentPath) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const rows = doc.querySelectorAll('table tr');
+            const items = [];
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 3) {
+                    const typeCell = cells[0].textContent.trim();
+                    const nameCell = cells[1].textContent.trim();
+                    const linkCell = cells[2].querySelector('a');
+
+                    if (nameCell && linkCell && !nameCell.includes('Back to Parent')) {
+                        const isDirectory = typeCell.includes('Directory');
+                        const href = linkCell.getAttribute('href');
+                        
+                        // Parse the path from the href
+                        let itemPath = '';
+                        if (href && href.includes('path=')) {
+                            const pathMatch = href.match(/path=([^&]+)/);
+                            if (pathMatch) {
+                                itemPath = decodeURIComponent(pathMatch[1]).replace('/var/www/html', '');
+                            }
+                        }
+
+                        items.push({
+                            name: nameCell,
+                            type: isDirectory ? 'directory' : 'file',
+                            path: itemPath || `${currentPath === '/' ? '' : currentPath}/${nameCell}`,
+                            timestamp: extractTimestamp(nameCell)
+                        });
+                    }
+                }
+            });
+
+            // Sort: directories first, then by name
+            return items.sort((a, b) => {
+                if (a.type !== b.type) return a.type === 'directory' ? -1 : 1;
+                return a.name.localeCompare(b.name);
+            });
+        }
+
+        function extractTimestamp(name) {
+            // Extract timestamp from names like "Nov_21_2025_03_45_rest_api_rest-api-automation"
+            const match = name.match(/([A-Za-z]{3}_\d{2}_\d{4}_\d{2}_\d{2})/);
+            if (match) {
+                const parts = match[1].split('_');
+                return `${parts[0]} ${parts[1]}, ${parts[2]} ${parts[3]}:${parts[4]}`;
+            }
+            return null;
+        }
+
+        function renderDirectories(items) {
+            const grid = document.getElementById('restapiGrid');
+            const searchValue = document.getElementById('restapiSearch').value.toLowerCase();
+            const dateFilterValue = document.getElementById('dateFilter')?.value;
+
+            // Apply search filter
+            let filtered = searchValue 
+                ? items.filter(item => item.name.toLowerCase().includes(searchValue))
+                : items;
+
+            // Apply date filter if we're in an env folder and a date is selected
+            if (isInEnvFolder && dateFilterValue) {
+                const selectedDate = new Date(dateFilterValue);
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const month = monthNames[selectedDate.getMonth()];
+                const day = String(selectedDate.getDate()).padStart(2, '0');
+                const year = selectedDate.getFullYear();
+                
+                // Create pattern to match: "Mon_DD_YYYY" format in folder names
+                const datePattern = `${month}_${day}_${year}`;
+                
+                filtered = filtered.filter(item => {
+                    return item.name.includes(datePattern);
+                });
+            }
+
+            const hasFilters = searchValue || (isInEnvFolder && dateFilterValue);
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1; padding: 3rem;">
+                        <div class="empty-state-icon">📁</div>
+                        <h3>No items found</h3>
+                        <p>${hasFilters ? 'Try adjusting your filters' : 'This directory is empty'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="restapi-card ${item.type}" data-path="${item.path}" data-type="${item.type}">
+                    <div class="restapi-card-icon">${item.type === 'directory' ? '📁' : '📄'}</div>
+                    <div class="restapi-card-info">
+                        <div class="restapi-card-name" title="${item.name}">${formatProjectName(item.name)}</div>
+                        <div class="restapi-card-meta">
+                            ${item.timestamp || (item.type === 'directory' ? 'Directory' : 'Report')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add click handlers
+            grid.querySelectorAll('.restapi-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const path = card.dataset.path;
+                    const type = card.dataset.type;
+
+                    if (type === 'directory') {
+                        navigateToPath(path);
+                    } else {
+                        navigationHistory.push(currentPath); // Track before opening report
+                        openReport(path);
+                    }
+                });
+            });
+        }
+
+        function formatProjectName(name) {
+            // Clean up common prefixes and make it more readable
+            return name
+                .replace(/^[A-Za-z]{3}_\d{2}_\d{4}_\d{2}_\d{2}_/, '')
+                .replace(/_/g, ' ')
+                .substring(0, 40) + (name.length > 40 ? '...' : '');
+        }
+
+        function updateBreadcrumb(path) {
+            const breadcrumb = document.getElementById('breadcrumb');
+            const backBtn = document.getElementById('restapiBackBtn');
+            const parts = path.split('/').filter(p => p);
+
+            // Show/hide back button based on whether we're at root
+            if (backBtn) {
+                if (parts.length > 0) {
+                    backBtn.classList.remove('hidden');
+                } else {
+                    backBtn.classList.add('hidden');
+                }
+            }
+
+            let html = `<span class="breadcrumb-item ${parts.length === 0 ? 'active' : ''}" data-path="/">🏠 Home</span>`;
+
+            let currentPathBuild = '';
+            parts.forEach((part, index) => {
+                currentPathBuild += '/' + part;
+                const isActive = index === parts.length - 1;
+                html += `
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-item ${isActive ? 'active' : ''}" data-path="${currentPathBuild}">
+                        ${formatProjectName(part)}
+                    </span>
+                `;
+            });
+
+            breadcrumb.innerHTML = html;
+
+            // Add click handlers to breadcrumb items
+            breadcrumb.querySelectorAll('.breadcrumb-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const targetPath = item.dataset.path;
+                    navigateToPath(targetPath);
+                });
+            });
+        }
+
+        // Navigate to path with history tracking
+        function navigateToPath(targetPath) {
+            // Don't add to history if going to current path
+            if (targetPath !== currentPath) {
+                navigationHistory.push(currentPath);
+            }
+            fetchDirectory(targetPath);
+        }
+
+        // Go back one level in navigation history
+        function navigateBack() {
+            if (navigationHistory.length > 0) {
+                const previousPath = navigationHistory.pop();
+                fetchDirectory(previousPath);
+            } else {
+                // If no history, go to parent folder
+                const parts = currentPath.split('/').filter(p => p);
+                if (parts.length > 0) {
+                    parts.pop();
+                    const parentPath = parts.length > 0 ? '/' + parts.join('/') : '/';
+                    fetchDirectory(parentPath);
+                }
+            }
+        }
+
+        async function openReport(path) {
+            const loading = document.getElementById('restapiLoading');
+            const content = document.getElementById('restapiContent');
+            const report = document.getElementById('restapiReport');
+            const frame = document.getElementById('reportFrame');
+            const openLink = document.getElementById('openInNewTab');
+
+            loading.classList.add('hidden');
+            content.classList.add('hidden');
+
+            // Check if this is a directory with index.html
+            let reportUrl = `${REST_REPORTS_CONFIG.baseUrl}${path}`;
+            if (!path.endsWith('.html')) {
+                reportUrl = `${REST_REPORTS_CONFIG.baseUrl}${path}/index.html`;
+            }
+
+            // Direct URL for opening in new tab (with credentials)
+            let directUrl = `https://portal_user:celigo%40123@${REST_REPORTS_CONFIG.directUrl.replace('https://', '')}${path}`;
+            if (!path.endsWith('.html')) {
+                directUrl = `https://portal_user:celigo%40123@${REST_REPORTS_CONFIG.directUrl.replace('https://', '')}${path}/index.html`;
+            }
+
+            frame.src = reportUrl;
+            openLink.href = directUrl;
+
+            report.classList.remove('hidden');
+        }
+
+        function setupRestApiReportsListeners() {
+            // Search input
+            const searchInput = document.getElementById('restapiSearch');
+            searchInput.addEventListener('input', () => {
+                renderDirectories(allDirectories);
+            });
+
+            // Date filter input
+            const dateFilter = document.getElementById('dateFilter');
+            dateFilter.addEventListener('change', () => {
+                renderDirectories(allDirectories);
+            });
+
+            // Clear date filter button
+            const clearDateBtn = document.getElementById('clearDateFilter');
+            clearDateBtn.addEventListener('click', () => {
+                dateFilter.value = '';
+                renderDirectories(allDirectories);
+            });
+
+            // Back to list button (for report viewer)
+            document.getElementById('backToList').addEventListener('click', () => {
+                const report = document.getElementById('restapiReport');
+                const content = document.getElementById('restapiContent');
+                const frame = document.getElementById('reportFrame');
+
+                frame.src = '';
+                report.classList.add('hidden');
+                content.classList.remove('hidden');
+            });
+
+            // Back navigation button
+            const restapiBackBtn = document.getElementById('restapiBackBtn');
+            if (restapiBackBtn) {
+                restapiBackBtn.addEventListener('click', navigateBack);
+            }
+        }
+
+        // Initialize REST API Reports when tab is first shown
+        let restApiInitialized = false;
+        
+        // Override tab setup to initialize REST API reports
+        const originalSetupTabs = setupTabs;
+        setupTabs = function() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+
+                    // Initialize REST API reports on first view
+                    if (btn.dataset.tab === 'restapi' && !restApiInitialized) {
+                        restApiInitialized = true;
+                        setupRestApiReportsListeners();
+                        initRestApiReports();
+                    }
+                });
+            });
+        };
     </script>
 </body>
 </html>
-
