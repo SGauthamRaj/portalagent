@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReportPortal Live Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #050508;
+            --bg-card: #0d0f14;
+            --bg-hover: #141820;
+            --accent-cyan: #00f0ff;
+            --accent-green: #00ff88;
+            --accent-red: #ff3860;
+            --accent-yellow: #ffdd00;
+            --accent-purple: #bd00ff;
+            --text-primary: #ffffff;
+            --text-secondary: #7a8599;
+            --border: #1e2433;
+            --glow-cyan: 0 0 30px rgba(0, 240, 255, 0.4);
+            --glow-green: 0 0 30px rgba(0, 255, 136, 0.4);
+            --glow-red: 0 0 30px rgba(255, 56, 96, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--glow-cyan);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: var(--glow-cyan); }
+            50% { box-shadow: 0 0 50px rgba(0, 240, 255, 0.6); }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--accent-green);
+            border-radius: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-green);
+        }
+
+        .live-dot {
+            width: 10px; height: 10px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; box-shadow: var(--glow-green); }
+            50% { opacity: 0.3; box-shadow: none; }
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+        }
+
+        .stat-box:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-cyan);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-value.updating {
+            animation: countUp 0.5s ease-out;
+        }
+
+        @keyframes countUp {
+            0% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-box.total .stat-value { color: var(--accent-cyan); }
+        .stat-box.passed .stat-value { color: var(--accent-green); }
+        .stat-box.failed .stat-value { color: var(--accent-red); }
+        .stat-box.running .stat-value { color: var(--accent-yellow); }
+        .stat-box.rate .stat-value { color: var(--accent-purple); }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Live Feed */
+        .live-feed {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0, 240, 255, 0.02);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .refresh-timer {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .feed-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .feed-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .feed-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .feed-item.new {
+            background: rgba(0, 240, 255, 0.05);
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        .status-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .status-icon.passed { background: rgba(0, 255, 136, 0.15); }
+        .status-icon.failed { background: rgba(255, 56, 96, 0.15); }
+        .status-icon.running { background: rgba(255, 221, 0, 0.15); animation: spin 2s linear infinite; }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .feed-info h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 400px;
+        }
+
+        .feed-info span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .feed-stats {
+            display: flex;
+            gap: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .feed-stats .passed { color: var(--accent-green); }
+        .feed-stats .failed { color: var(--accent-red); }
+
+        .feed-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* Failed Tests Panel */
+        .failed-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .failed-panel .section-header {
+            background: rgba(255, 56, 96, 0.05);
+            border-bottom-color: rgba(255, 56, 96, 0.3);
+        }
+
+        .failed-panel .section-title {
+            color: var(--accent-red);
+        }
+
+        .failed-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .failed-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .failed-item:hover {
+            background: rgba(255, 56, 96, 0.05);
+        }
+
+        .failed-item h5 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--accent-red);
+        }
+
+        .failed-item p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .failed-item .suite-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            margin-top: 0.5rem;
+        }
+
+        /* Progress Rings */
+        .progress-ring {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-top: 1.5rem;
+        }
+
+        .ring-container {
+            text-align: center;
+        }
+
+        .ring {
+            width: 120px;
+            height: 120px;
+            position: relative;
+        }
+
+        .ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+
+        .ring .bg { stroke: var(--border); }
+        .ring .progress {
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .ring .progress.green { stroke: var(--accent-green); filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5)); }
+        .ring .progress.red { stroke: var(--accent-red); filter: drop-shadow(0 0 10px rgba(255, 56, 96, 0.5)); }
+        .ring .progress.cyan { stroke: var(--accent-cyan); filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5)); }
+
+        .ring-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .ring-label {
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .control-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .control-btn.active {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            color: var(--bg-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            header { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">📊</div>
+                <h1>Live Dashboard</h1>
+            </div>
+            <div class="controls">
+                <button class="control-btn active" data-interval="10">10s</button>
+                <button class="control-btn" data-interval="30">30s</button>
+                <button class="control-btn" data-interval="60">60s</button>
+            </div>
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                <span>LIVE</span>
+                <span id="lastUpdate">--:--:--</span>
+            </div>
+        </header>
+
+        <div class="stats-row">
+            <div class="stat-box total">
+                <div class="stat-value" id="totalLaunches">0</div>
+                <div class="stat-label">Total Launches</div>
+            </div>
+            <div class="stat-box passed">
+                <div class="stat-value" id="passedCount">0</div>
+                <div class="stat-label">Passed</div>
+            </div>
+            <div class="stat-box failed">
+                <div class="stat-value" id="failedCount">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+            <div class="stat-box running">
+                <div class="stat-value" id="runningCount">0</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat-box rate">
+                <div class="stat-value" id="passRate">0%</div>
+                <div class="stat-label">Pass Rate</div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <div class="live-feed">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span>⚡</span> Recent Test Runs
+                    </div>
+                    <div class="refresh-timer">Next refresh: <span id="countdown">10</span>s</div>
+                </div>
+                <div class="feed-list" id="feedList">
+                    <!-- Feed items will be inserted here -->
+                </div>
+            </div>
+
+            <div class="failed-panel">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span>❌</span> Recent Failures
+                    </div>
+                    <div class="refresh-timer" id="failedCount2">0 failures</div>
+                </div>
+                <div class="failed-list" id="failedList">
+                    <!-- Failed items will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-ring">
+            <div class="ring-container">
+                <div class="ring">
+                    <svg width="120" height="120">
+                        <circle class="bg" cx="60" cy="60" r="52"></circle>
+                        <circle class="progress green" id="passRing" cx="60" cy="60" r="52" 
+                                stroke-dasharray="326.73" stroke-dashoffset="326.73"></circle>
+                    </svg>
+                    <div class="ring-value" id="passRingValue" style="color: var(--accent-green)">0%</div>
+                </div>
+                <div class="ring-label">Pass Rate</div>
+            </div>
+            <div class="ring-container">
+                <div class="ring">
+                    <svg width="120" height="120">
+                        <circle class="bg" cx="60" cy="60" r="52"></circle>
+                        <circle class="progress red" id="failRing" cx="60" cy="60" r="52"
+                                stroke-dasharray="326.73" stroke-dashoffset="326.73"></circle>
+                    </svg>
+                    <div class="ring-value" id="failRingValue" style="color: var(--accent-red)">0%</div>
+                </div>
+                <div class="ring-label">Fail Rate</div>
+            </div>
+            <div class="ring-container">
+                <div class="ring">
+                    <svg width="120" height="120">
+                        <circle class="bg" cx="60" cy="60" r="52"></circle>
+                        <circle class="progress cyan" id="coverageRing" cx="60" cy="60" r="52"
+                                stroke-dasharray="326.73" stroke-dashoffset="326.73"></circle>
+                    </svg>
+                    <div class="ring-value" id="coverageValue" style="color: var(--accent-cyan)">0</div>
+                </div>
+                <div class="ring-label">Suites Today</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            RP_HOST: window.location.origin,
+            RP_PROJECT: 'staging_suites',
+            RP_DIRECT: 'https://reportportal.qa.staging.integrator.io'
+        };
+
+        let refreshInterval = 10;
+        let countdown = refreshInterval;
+        let countdownTimer = null;
+        let previousLaunches = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupControls();
+            fetchData();
+            startCountdown();
+        });
+
+        // Setup refresh interval controls
+        function setupControls() {
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    refreshInterval = parseInt(btn.dataset.interval);
+                    countdown = refreshInterval;
+                });
+            });
+        }
+
+        // Start countdown timer
+        function startCountdown() {
+            countdownTimer = setInterval(() => {
+                countdown--;
+                document.getElementById('countdown').textContent = countdown;
+                
+                if (countdown <= 0) {
+                    countdown = refreshInterval;
+                    fetchData();
+                }
+            }, 1000);
+        }
+
+        // Fetch data from ReportPortal
+        async function fetchData() {
+            try {
+                // Get recent launches
+                const response = await fetch(
+                    `${CONFIG.RP_HOST}/api/v1/${CONFIG.RP_PROJECT}/launch?page.size=20&page.sort=startTime,desc`
+                );
+                
+                if (!response.ok) throw new Error('Failed to fetch');
+                
+                const data = await response.json();
+                const launches = data.content;
+
+                updateStats(launches);
+                updateFeed(launches);
+                await updateFailedTests(launches);
+                updateRings(launches);
+                updateLastUpdate();
+
+                previousLaunches = launches.map(l => l.id);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Update statistics
+        function updateStats(launches) {
+            const stats = {
+                total: launches.length,
+                passed: launches.filter(l => l.status === 'PASSED').length,
+                failed: launches.filter(l => l.status === 'FAILED').length,
+                running: launches.filter(l => l.status === 'IN_PROGRESS').length
+            };
+
+            const passRate = stats.total > 0 
+                ? Math.round((stats.passed / stats.total) * 100) 
+                : 0;
+
+            animateValue('totalLaunches', stats.total);
+            animateValue('passedCount', stats.passed);
+            animateValue('failedCount', stats.failed);
+            animateValue('runningCount', stats.running);
+            document.getElementById('passRate').textContent = passRate + '%';
+        }
+
+        // Animate value change
+        function animateValue(id, value) {
+            const el = document.getElementById(id);
+            const current = parseInt(el.textContent) || 0;
+            
+            if (current !== value) {
+                el.textContent = value;
+                el.classList.add('updating');
+                setTimeout(() => el.classList.remove('updating'), 500);
+            }
+        }
+
+        // Update live feed
+        function updateFeed(launches) {
+            const feedList = document.getElementById('feedList');
+            
+            feedList.innerHTML = launches.map((launch, i) => {
+                const isNew = !previousLaunches.includes(launch.id);
+                const stats = launch.statistics?.executions || {};
+                const time = formatTime(launch.startTime);
+                
+                return `
+                    <div class="feed-item ${isNew ? 'new' : ''}" style="animation-delay: ${i * 0.05}s">
+                        <div class="status-icon ${launch.status.toLowerCase()}">
+                            ${getStatusIcon(launch.status)}
+                        </div>
+                        <div class="feed-info">
+                            <h4>${formatSuiteName(launch.name)}</h4>
+                            <span>#${launch.number} • ${launch.owner || 'Unknown'}</span>
+                        </div>
+                        <div class="feed-stats">
+                            <span class="passed">✓ ${stats.passed || 0}</span>
+                            <span class="failed">✗ ${stats.failed || 0}</span>
+                        </div>
+                        <div class="feed-time">${time}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update failed tests panel
+        async function updateFailedTests(launches) {
+            const failedLaunches = launches.filter(l => l.status === 'FAILED').slice(0, 5);
+            const failedList = document.getElementById('failedList');
+            
+            let failedItems = [];
+
+            for (const launch of failedLaunches) {
+                try {
+                    const response = await fetch(
+                        `${CONFIG.RP_HOST}/api/v1/${CONFIG.RP_PROJECT}/item?filter.eq.launchId=${launch.id}&filter.eq.status=FAILED&page.size=3`
+                    );
+                    const data = await response.json();
+                    const tests = data.content.filter(i => i.type === 'STEP').slice(0, 2);
+                    
+                    tests.forEach(test => {
+                        failedItems.push({
+                            name: test.name,
+                            suite: launch.name,
+                            time: formatTime(launch.startTime)
+                        });
+                    });
+                } catch (e) { /* ignore */ }
+            }
+
+            document.getElementById('failedCount2').textContent = `${failedItems.length} failures`;
+
+            failedList.innerHTML = failedItems.slice(0, 10).map(item => `
+                <div class="failed-item">
+                    <h5>${item.name.substring(0, 80)}${item.name.length > 80 ? '...' : ''}</h5>
+                    <div class="suite-name">${formatSuiteName(item.suite)} • ${item.time}</div>
+                </div>
+            `).join('');
+        }
+
+        // Update progress rings
+        function updateRings(launches) {
+            const total = launches.length;
+            const passed = launches.filter(l => l.status === 'PASSED').length;
+            const failed = launches.filter(l => l.status === 'FAILED').length;
+
+            const passRate = total > 0 ? (passed / total) * 100 : 0;
+            const failRate = total > 0 ? (failed / total) * 100 : 0;
+
+            setRingProgress('passRing', passRate);
+            setRingProgress('failRing', failRate);
+            setRingProgress('coverageRing', Math.min(total * 5, 100));
+
+            document.getElementById('passRingValue').textContent = Math.round(passRate) + '%';
+            document.getElementById('failRingValue').textContent = Math.round(failRate) + '%';
+            document.getElementById('coverageValue').textContent = total;
+        }
+
+        function setRingProgress(id, percentage) {
+            const ring = document.getElementById(id);
+            const circumference = 326.73;
+            const offset = circumference - (percentage / 100) * circumference;
+            ring.style.strokeDashoffset = offset;
+        }
+
+        // Helper functions
+        function getStatusIcon(status) {
+            switch (status) {
+                case 'PASSED': return '✓';
+                case 'FAILED': return '✗';
+                case 'IN_PROGRESS': return '◌';
+                default: return '?';
+            }
+        }
+
+        function formatSuiteName(name) {
+            return name
+                .replace('PLATFORM_UI_AUTOMATION_', 'UI: ')
+                .replace('PLATFORM_API_', 'API: ')
+                .replace(/_AUTOMATION_TESTS_STAGING/g, '')
+                .replace(/_/g, ' ');
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000 / 60);
+
+            if (diff < 1) return 'Just now';
+            if (diff < 60) return `${diff}m ago`;
+            if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
+            return date.toLocaleDateString();
+        }
+
+        function updateLastUpdate() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = 
+                now.toLocaleTimeString('en-US', { hour12: false });
+        }
+    </script>
+</body>
+</html>
+
