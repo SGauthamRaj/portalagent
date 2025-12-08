@@ -1072,7 +1072,10 @@
             });
         }
 
-        // Tab Navigation
+        // Initialize REST API Reports when tab is first shown
+        let restApiInitialized = false;
+
+        // Tab Navigation with REST API lazy initialization
         function setupTabs() {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1080,6 +1083,13 @@
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                     btn.classList.add('active');
                     document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+
+                    // Initialize REST API reports on first view
+                    if (btn.dataset.tab === 'restapi' && !restApiInitialized) {
+                        restApiInitialized = true;
+                        setupRestApiReportsListeners();
+                        initRestApiReports();
+                    }
                 });
             });
         }
@@ -1824,28 +1834,7 @@
             }
         }
 
-        // Initialize REST API Reports when tab is first shown
-        let restApiInitialized = false;
-        
-        // Override tab setup to initialize REST API reports
-        const originalSetupTabs = setupTabs;
-        setupTabs = function() {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    btn.classList.add('active');
-                    document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
 
-                    // Initialize REST API reports on first view
-                    if (btn.dataset.tab === 'restapi' && !restApiInitialized) {
-                        restApiInitialized = true;
-                        setupRestApiReportsListeners();
-                        initRestApiReports();
-                    }
-                });
-            });
-        };
     </script>
 </body>
 </html>
