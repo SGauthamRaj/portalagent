@@ -889,6 +889,252 @@
             font-size: 0.7rem;
             color: var(--text-secondary);
         }
+
+        /* API Owners Tab Styles */
+        .owner-controls {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .owner-controls {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .owner-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .owner-suites-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .owner-suites-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.05), rgba(189, 0, 255, 0.05));
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .owner-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .owner-avatar {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .owner-details h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .owner-stats {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .owner-summary {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 0.75rem 1.25rem;
+            background: var(--bg-hover);
+            border-radius: 10px;
+            min-width: 80px;
+        }
+
+        .summary-stat.passed { border: 1px solid var(--accent-green); }
+        .summary-stat.failed { border: 1px solid var(--accent-red); }
+        .summary-stat.total { border: 1px solid var(--accent-cyan); }
+
+        .summary-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .summary-stat.passed .summary-value { color: var(--accent-green); }
+        .summary-stat.failed .summary-value { color: var(--accent-red); }
+        .summary-stat.total .summary-value { color: var(--accent-cyan); }
+
+        .summary-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .owner-suites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .owner-suite-card {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .owner-suite-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 240, 255, 0.15);
+        }
+
+        .owner-suite-card.passed { border-left: 4px solid var(--accent-green); }
+        .owner-suite-card.failed { border-left: 4px solid var(--accent-red); }
+        .owner-suite-card.in_progress { border-left: 4px solid var(--accent-yellow); }
+        .owner-suite-card.has-report { border-left: 4px solid var(--accent-green); }
+        .owner-suite-card.no-runs { border-left: 4px solid var(--text-muted); opacity: 0.7; }
+
+        .owner-suite-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .owner-suite-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .owner-suite-name .suite-category {
+            font-size: 0.7rem;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .owner-suite-status {
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .owner-suite-status.passed { background: rgba(0, 255, 136, 0.15); color: var(--accent-green); }
+        .owner-suite-status.failed { background: rgba(255, 56, 96, 0.15); color: var(--accent-red); }
+        .owner-suite-status.in_progress { background: rgba(255, 221, 0, 0.15); color: var(--accent-yellow); }
+        .owner-suite-status.no-runs { background: rgba(122, 133, 153, 0.15); color: var(--text-secondary); }
+
+        .owner-suite-stats {
+            display: flex;
+            gap: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .owner-suite-stats .passed { color: var(--accent-green); }
+        .owner-suite-stats .failed { color: var(--accent-red); }
+        .owner-suite-stats .total { color: var(--text-secondary); }
+
+        .owner-suite-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .owner-suite-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .owner-detail-card {
+            margin-top: 1.5rem;
+        }
+
+        .no-owner-suites {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .no-owner-suites-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .direct-report-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: rgba(0, 240, 255, 0.15);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+
+        .direct-report-link:hover {
+            background: rgba(0, 240, 255, 0.3);
+            transform: scale(1.1);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .owner-suite-card {
+            cursor: pointer;
+        }
+
+        .owner-suite-card.no-runs {
+            cursor: default;
+        }
     </style>
 </head>
 <body>
@@ -906,6 +1152,9 @@
         <div class="tabs">
             <button class="tab-btn active" data-tab="main">
                 <span>🔍</span> Suite Report
+            </button>
+            <button class="tab-btn" data-tab="owner">
+                <span>🔌</span> API Owners
             </button>
             <button class="tab-btn" data-tab="restapi">
                 <span>🗂️</span> REST API Reports
@@ -985,6 +1234,105 @@
                 <div class="failed-tests-panel hidden" id="reportFailedPanel">
                     <div class="failed-tests-header"><span>❌</span> Failed Test Cases</div>
                     <div class="failed-test-list" id="reportFailedList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Owners Tab -->
+        <div class="tab-content" id="ownerTab">
+            <div class="owner-controls">
+                <div class="form-group">
+                    <label>Environment</label>
+                    <div class="select-wrapper">
+                        <select id="ownerEnvSelect">
+                            <option value="staging">Staging</option>
+                            <option value="qa">QA</option>
+                            <option value="iaqa">IAQA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Owner</label>
+                    <div class="select-wrapper">
+                        <select id="ownerSelect">
+                            <option value="">-- Select an API Owner --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Filter by Date</label>
+                    <div class="date-picker-wrapper">
+                        <input type="date" id="ownerDateFilter" class="date-picker-input">
+                        <button id="clearOwnerDateFilter" class="clear-date-btn-inline" title="Clear date">✕</button>
+                    </div>
+                </div>
+                <button class="btn-primary" id="fetchOwnerSuitesBtn" disabled>
+                    <span>🔍</span> Get Suites
+                </button>
+            </div>
+
+            <div id="ownerEmptyState" class="empty-state">
+                <div class="empty-state-icon">🔌</div>
+                <h3>Select an API Owner</h3>
+                <p>Choose an environment, API owner, and optionally a date to view their REST API test suites</p>
+            </div>
+
+            <div id="ownerLoadingState" class="loading-state hidden">
+                <div class="spinner"></div>
+                <p>Fetching owner suites...</p>
+            </div>
+
+            <div id="ownerSuitesContainer" class="owner-suites-container hidden">
+                <div class="owner-suites-header">
+                    <div class="owner-info">
+                        <span class="owner-avatar">👤</span>
+                        <div class="owner-details">
+                            <h3 id="selectedOwnerName">-</h3>
+                            <span id="selectedOwnerStats" class="owner-stats">-</span>
+                        </div>
+                    </div>
+                    <div class="owner-summary">
+                        <div class="summary-stat passed">
+                            <span class="summary-value" id="ownerPassedCount">0</span>
+                            <span class="summary-label">With Reports</span>
+                        </div>
+                        <div class="summary-stat failed">
+                            <span class="summary-value" id="ownerFailedCount">0</span>
+                            <span class="summary-label">No Reports</span>
+                        </div>
+                        <div class="summary-stat total">
+                            <span class="summary-value" id="ownerTotalCount">0</span>
+                            <span class="summary-label">Total Suites</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="owner-suites-grid" id="ownerSuitesGrid"></div>
+            </div>
+
+            <!-- Owner Suite Detail Modal -->
+            <div id="ownerSuiteDetailCard" class="report-card hidden owner-detail-card">
+                <div class="report-header">
+                    <button class="back-btn" id="backToOwnerSuites">← Back to API Owners</button>
+                    <div class="report-title" id="ownerDetailSuiteName">-</div>
+                    <div class="status-badge" id="ownerDetailStatus">-</div>
+                </div>
+                <div class="report-stats">
+                    <div class="report-stat"><div class="report-stat-value total" id="ownerDetailTotal">0</div><div class="report-stat-label">Total Tests</div></div>
+                    <div class="report-stat"><div class="report-stat-value passed" id="ownerDetailPassed">0</div><div class="report-stat-label">Passed</div></div>
+                    <div class="report-stat"><div class="report-stat-value failed" id="ownerDetailFailed">0</div><div class="report-stat-label">Failed</div></div>
+                    <div class="report-stat"><div class="report-stat-value duration" id="ownerDetailDuration">0m</div><div class="report-stat-label">Duration</div></div>
+                </div>
+                <div class="report-meta">
+                    <div class="meta-item"><span class="meta-label">Launch ID</span><span class="meta-value" id="ownerDetailLaunchId">-</span></div>
+                    <div class="meta-item"><span class="meta-label">Run Number</span><span class="meta-value" id="ownerDetailRunNumber">-</span></div>
+                    <div class="meta-item"><span class="meta-label">Build Date</span><span class="meta-value" id="ownerDetailBuildDate">-</span></div>
+                    <div class="meta-item"><span class="meta-label">Owner</span><span class="meta-value" id="ownerDetailOwner">-</span></div>
+                    <div class="meta-item"><span class="meta-label">Platform</span><span class="meta-value" id="ownerDetailPlatform">-</span></div>
+                    <div class="meta-item"><span class="meta-label">Actions</span><a href="#" class="link-btn" id="ownerDetailLink" target="_blank">🔗 View in ReportPortal</a></div>
+                </div>
+                <div class="failed-tests-panel hidden" id="ownerDetailFailedPanel">
+                    <div class="failed-tests-header"><span>❌</span> Failed Test Cases</div>
+                    <div class="failed-test-list" id="ownerDetailFailedList"></div>
                 </div>
             </div>
         </div>
@@ -1075,7 +1423,7 @@
         // Initialize REST API Reports when tab is first shown
         let restApiInitialized = false;
 
-        // Tab Navigation with REST API lazy initialization
+        // Tab Navigation with lazy initialization
         function setupTabs() {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1833,6 +2181,843 @@
                 restapiBackBtn.addEventListener('click', navigateBack);
             }
         }
+
+        // ==================== OWNER SUITES ====================
+        // Owner-Suite mapping from CSV data
+        const OWNER_SUITE_MAPPING = [
+            { category: "agent-extension", suite: "Agents", owner: "Deepak" },
+            { category: "api_execution", suite: "API_BUILDER_ADAPTOR", owner: "Sathwika" },
+            { category: "api_execution", suite: "APIBUILDER_SFNS_E2E", owner: "Sathwika" },
+            { category: "as2-adaptor", suite: "AS2Exports", owner: "Shakeer" },
+            { category: "as2-adaptor", suite: "AS2Imports", owner: "Shakeer" },
+            { category: "as2-adaptor", suite: "Standalone", owner: "Shakeer" },
+            { category: "as2-adaptor", suite: "VAN", owner: "Shakeer" },
+            { category: "authentication-service", suite: "Email_Signup_Validation2", owner: "Ashwatha" },
+            { category: "authentication-service", suite: "Optimize_signup", owner: "Naveen" },
+            { category: "authentication-service", suite: "University", owner: "Gautham" },
+            { category: "authentication-service", suite: "MFA", owner: "Naveen" },
+            { category: "authentication-service", suite: "Phase_0_SampleIntegration_Install", owner: "Gautham" },
+            { category: "authentication-service", suite: "Email_Signup_Validation", owner: "Ashwatha" },
+            { category: "authentication-service", suite: "OPTIMIZE_SIGNUP2", owner: "Ashwatha" },
+            { category: "authentication-service", suite: "ACCOUNTLEVELACCESS_ADMIN", owner: "Deepak" },
+            { category: "COMMON_SUITES", suite: "AshareId_Related_TCs", owner: "Prerana" },
+            { category: "COMMON_SUITES", suite: "Dropbox", owner: "Swathi" },
+            { category: "COMMON_SUITES", suite: "Splunk", owner: "Akhil" },
+            { category: "COMMON_SUITES", suite: "AccountLevelAccess", owner: "Deepak" },
+            { category: "COMMON_SUITES", suite: "DI_CORE", owner: "Geethika" },
+            { category: "COMMON_SUITES", suite: "SignedURL", owner: "Prerana" },
+            { category: "COMMON_SUITES", suite: "AccessData", owner: "Prerana" },
+            { category: "COMMON_SUITES", suite: "FileAdaptor_GeneralServices3", owner: "Swathi" },
+            { category: "COMMON_SUITES", suite: "On_Prem_DB", owner: "Bhanu" },
+            { category: "COMMON_SUITES", suite: "AccountLevelAccess_Monitor_Tile", owner: "Deepak" },
+            { category: "COMMON_SUITES", suite: "AccountLevelAccess_Monitor", owner: "Deepak" },
+            { category: "COMMON_SUITES", suite: "AccountLevelAccess_Manage_or_Monitor", owner: "Deepak" },
+            { category: "COMMON_SUITES", suite: "MultiEnvironment_2", owner: "Kaivalya" },
+            { category: "COMMON_SUITES", suite: "Splunk_3", owner: "Akhil" },
+            { category: "COMMON_SUITES", suite: "Box_Connector", owner: "Swathi" },
+            { category: "COMMON_SUITES", suite: "Splunk_2", owner: "Akhil" },
+            { category: "COMMON_SUITES", suite: "Csrf_Related_TCs", owner: "Suman" },
+            { category: "COMMON_SUITES", suite: "On_Prem", owner: "Bhanu" },
+            { category: "COMMON_SUITES", suite: "FileAdaptor_GeneralServices", owner: "Swathi" },
+            { category: "COMMON_SUITES", suite: "Csrf_Related_TCs2", owner: "Gautham" },
+            { category: "COMMON_SUITES", suite: "gptverse", owner: "Randeep" },
+            { category: "data-warehouse-adaptor", suite: "Snowflake_BulkLoad3", owner: "Bhanu" },
+            { category: "data-warehouse-adaptor", suite: "Data_warehouse_Adaptor", owner: "Bhanu" },
+            { category: "data-warehouse-adaptor", suite: "Snowflake_BulkLoad", owner: "Bhanu" },
+            { category: "data-warehouse-adaptor", suite: "Snowflake_BulkLoad2", owner: "Bhanu" },
+            { category: "data-warehouse-adaptor", suite: "Snowflake_BulkLoad4", owner: "Bhanu" },
+            { category: "EDI-SUITES", suite: "EDI_TPConnector", owner: "Shakeer" },
+            { category: "EDI-SUITES", suite: "EDIGlobalParser_Generator", owner: "Shakeer" },
+            { category: "EDI-SUITES", suite: "EDI_licenses", owner: "Shakeer" },
+            { category: "EDI-SUITES", suite: "EDIProfiles", owner: "Shakeer" },
+            { category: "EDI-SUITES", suite: "EDI", owner: "Shakeer" },
+            { category: "EDI-SUITES", suite: "EDI2", owner: "Shakeer" },
+            { category: "EDI-SUITES", suite: "EDIDashboard", owner: "Shakeer" },
+            { category: "EDI-SUITES", suite: "EDIProfile_ILM", owner: "Shakeer" },
+            { category: "endpoint-service", suite: "Mapper2.0_Suite1", owner: "Shiva" },
+            { category: "endpoint-service", suite: "MYAPI_MS", owner: "Sowmya" },
+            { category: "endpoint-service", suite: "Proxy", owner: "Sowmya" },
+            { category: "endpoint-service", suite: "Oauth2MS", owner: "Sowmya" },
+            { category: "endpoint-service", suite: "Transformation2.0_suite2", owner: "Shiva" },
+            { category: "endpoint-service", suite: "Metadata", owner: "Bhanu" },
+            { category: "endpoint-service", suite: "UI2API_MAPPER2.0", owner: "Shiva" },
+            { category: "endpoint-service", suite: "ResourceAliases", owner: "Anitha" },
+            { category: "endpoint-service", suite: "Mapper2.0_Suite3", owner: "Shiva" },
+            { category: "endpoint-service", suite: "Mapper2.0_Suite4", owner: "Shiva" },
+            { category: "endpoint-service", suite: "Mapper2.0_Suite2", owner: "Shiva" },
+            { category: "endpoint-service", suite: "Mapper_Preview", owner: "Shiva" },
+            { category: "endpoint-service", suite: "Transformation2.0_suite1", owner: "Shiva" },
+            { category: "endpoint-service", suite: "AFE", owner: "Shiva" },
+            { category: "endpoint-service", suite: "ResponseHeaderToken", owner: "Sowmya" },
+            { category: "endpoint-service", suite: "NETSUITE4_EP", owner: "Anitha" },
+            { category: "endpoint-service", suite: "STANDALONE", owner: "Sowmya" },
+            { category: "error-notifications", suite: "Notification_Emails_3", owner: "Naveen" },
+            { category: "error-notifications", suite: "Notification_Emails_4", owner: "Naveen" },
+            { category: "error-notifications", suite: "Notification_Emails_2", owner: "Naveen" },
+            { category: "error-notifications", suite: "Notification_Emails", owner: "Naveen" },
+            { category: "error-notifications", suite: "Notification_Emails_6", owner: "Naveen" },
+            { category: "error-notifications", suite: "Notification_Emails_5", owner: "Naveen" },
+            { category: "file-adaptor", suite: "S3_Adaptor2", owner: "Swathi" },
+            { category: "file-adaptor", suite: "S3_Adaptor", owner: "Swathi" },
+            { category: "file-adaptor", suite: "Dataloader", owner: "Swathi" },
+            { category: "file-adaptor", suite: "HTTP_OAUTH_1.0", owner: "Swathi" },
+            { category: "file-adaptor", suite: "LINEARCOMPLEX_E2E_FLOWS", owner: "Swathi" },
+            { category: "file-adaptor", suite: "SPLUNK_3", owner: "Swathi" },
+            { category: "file-adaptor", suite: "END_TO_END_FLOWS", owner: "Swathi" },
+            { category: "file-adaptor", suite: "CONNECTIONS", owner: "Swathi" },
+            { category: "file-service", suite: "FileServices", owner: "Swathi" },
+            { category: "flow-management", suite: "jobs_schema", owner: "Gaurav" },
+            { category: "flow-management", suite: "ETAG", owner: "Gautham" },
+            { category: "flow-management", suite: "FlowDebugger", owner: "Deepak" },
+            { category: "flow-management", suite: "Dashboard", owner: "Deepak" },
+            { category: "flow-management", suite: "EM2.0_2", owner: "Akhil" },
+            { category: "flow-management", suite: "Shopify", owner: "Naveen" },
+            { category: "flow-management", suite: "FlowSchedule", owner: "Suman" },
+            { category: "flow-management", suite: "Assign_Errors_To_Users", owner: "Kaivalya" },
+            { category: "flow-management", suite: "EM2.0", owner: "Akhil" },
+            { category: "flow-management", suite: "Assign_Errors_To_Users_2", owner: "Kaivalya" },
+            { category: "flow-management", suite: "FlowStepDebugLogs", owner: "Geethika" },
+            { category: "flow-management", suite: "SPLUNK_3", owner: "Geethika" },
+            { category: "flow-management", suite: "ACCESSDATA", owner: "Prerana" },
+            { category: "http-adaptor", suite: "Async_Helper", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "HTTP_Azure", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "JWTSchemavalidations", owner: "Shafeek" },
+            { category: "http-adaptor", suite: "HTTP_OAuth_1.0", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "HTTP4", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "HTTP_Connection", owner: "Shafeek" },
+            { category: "http-adaptor", suite: "Jwt_Standalone", owner: "Shafeek" },
+            { category: "http-adaptor", suite: "HTTP_URL_Download", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "HTTP_Adaptor_Global_iClient_support", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "GDRIVE2", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "HTTP3", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "AmazonSP", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "HTTP", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "HTTP2", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "HTTP_AXIOS_NEGATIVE", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "HTTP_AMAZON_PAY", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "HTTP_OAuth2.0_Redesign", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "SupportContent_BE", owner: "Shafeek" },
+            { category: "http-adaptor", suite: "HTTP_Async_Helper", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "HTTP_MS", owner: "Shafeek" },
+            { category: "http-adaptor", suite: "HTTP_fileSize", owner: "Shafeek" },
+            { category: "http-adaptor", suite: "HTTP_Blob_Export", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "RestImport", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "HTTP_Blob_Import", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "HTTP5", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "HTTP6", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "HTTP7", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "END_TO_END_FLOWS", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "LINEARCOMPLEX_E2E_FLOWS", owner: "Sujatha Kutcharlapati" },
+            { category: "http-adaptor", suite: "CONNECTIONS", owner: "Shafeek" },
+            { category: "http-adaptor", suite: "FileAdaptor_GeneralServices", owner: "Shafeek" },
+            { category: "http-adaptor", suite: "STANDALONE", owner: "Shafeek" },
+            { category: "http-adaptor", suite: "HUGE_RECORDS", owner: "Nishitha Maddati" },
+            { category: "http-adaptor", suite: "SPLUNK_3", owner: "Sujatha Kutcharlapati" },
+            { category: "jdbc-bridge", suite: "NSAW_BULKLOAD", owner: "Bhanu" },
+            { category: "jdbc-bridge", suite: "ActiveDirectory", owner: "Bhanu" },
+            { category: "jdbc-bridge", suite: "OracleADW", owner: "Bhanu" },
+            { category: "jdbc-bridge", suite: "NetSuite_JDBC", owner: "Bhanu" },
+            { category: "jdbc-bridge", suite: "Databricks", owner: "Bhanu" },
+            { category: "jdbc-bridge", suite: "WORKDAY", owner: "Bhanu" },
+            { category: "js-runtime", suite: "Scripts", owner: "Sowmya" },
+            { category: "js-runtime", suite: "JSRT_Invoke_route_Suite1", owner: "Sowmya" },
+            { category: "js-runtime", suite: "JSRT_Invoke_route_Suite2", owner: "Sowmya" },
+            { category: "js-runtime", suite: "JSRT_MyApi_Flows_Run", owner: "Sowmya" },
+            { category: "js-runtime", suite: "LINEARCOMPLEX_E2E_FLOWS", owner: "Sowmya" },
+            { category: "js-runtime", suite: "STANDALONE", owner: "Sowmya" },
+            { category: "netsuite-distributed-adaptor", suite: "NetSuite3", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NS_SS2_Suite1", owner: "Nithin" },
+            { category: "netsuite-distributed-adaptor", suite: "NetSuite4", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NetSuite5", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NETSUITEONCE", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NETSUITE_DISTRIBUTED", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NetSuite_FlowDebugger_Lookups", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NetSuite", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NS_SS2_Suite4", owner: "Nithin" },
+            { category: "netsuite-distributed-adaptor", suite: "NS_SS2_Suite3", owner: "Nithin" },
+            { category: "netsuite-distributed-adaptor", suite: "Netsuite_RestwebServices", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NS_SS2_Suite2", owner: "Nithin" },
+            { category: "netsuite-distributed-adaptor", suite: "NS_SS2_Suite5", owner: "Nithin" },
+            { category: "netsuite-distributed-adaptor", suite: "NetSuite_FlowDebugger", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "SuiteApp", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NETSUITE_DISTRIBUTED1", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "SuiteApp2", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NetSuite2", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "NS_SS2_Suite6", owner: "Nithin" },
+            { category: "netsuite-distributed-adaptor", suite: "STANDALONE", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "SPLUNK_3", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "END_TO_END_FLOWS", owner: "Anitha" },
+            { category: "netsuite-distributed-adaptor", suite: "CONNECTIONS", owner: "Anitha" },
+            { category: "netsuite-webservices-adaptor", suite: "NetSuite_FileProviders", owner: "Swathi" },
+            { category: "netsuite-webservices-adaptor", suite: "NetSuite_FileProviders2", owner: "Swathi" },
+            { category: "netsuite-webservices-adaptor", suite: "NETSUITE_WEBSERVICES", owner: "Anitha" },
+            { category: "netsuite-webservices-adaptor", suite: "STANDALONE", owner: "Anitha" },
+            { category: "nosql-db-adaptor", suite: "MongoDB", owner: "Bhanu" },
+            { category: "nosql-db-adaptor", suite: "DynamoDB", owner: "Bhanu" },
+            { category: "performance", suite: "SF_BULK_LOAD", owner: "Sathwika" },
+            { category: "rdbms-adaptor", suite: "PostgreSQL", owner: "Bhanu" },
+            { category: "rdbms-adaptor", suite: "MariaDB", owner: "Bhanu" },
+            { category: "rdbms-adaptor", suite: "AzureSynapse", owner: "Bhanu" },
+            { category: "rdbms-adaptor", suite: "MsSQL", owner: "Bhanu" },
+            { category: "rdbms-adaptor", suite: "MySql", owner: "Bhanu" },
+            { category: "rdbms-adaptor", suite: "ON_PREM", owner: "Bhanu" },
+            { category: "rdbms-adaptor", suite: "ON_PREM_DB", owner: "Bhanu" },
+            { category: "resource-management", suite: "Licenses", owner: "Suman" },
+            { category: "resource-management", suite: "FlowGrouping", owner: "Geethika" },
+            { category: "resource-management", suite: "InviteUser", owner: "Gautham" },
+            { category: "resource-management", suite: "Transfer_OwnerShip", owner: "Geethika" },
+            { category: "resource-management", suite: "IOAccount_NO_SBAccess", owner: "Geethika" },
+            { category: "resource-management", suite: "VAN_Connector", owner: "Naveen" },
+            { category: "resource-management", suite: "Transfer_Ownership_Email", owner: "Akhil" },
+            { category: "resource-management", suite: "Change_In_No_Of_Endpoints", owner: "Gaurav" },
+            { category: "resource-management", suite: "API_Management", owner: "Gaurav" },
+            { category: "resource-management", suite: "Server", owner: "Suman" },
+            { category: "resource-management", suite: "API_Builder", owner: "Gaurav" },
+            { category: "resource-management", suite: "APIM_MULTI_ENV_TEST", owner: "Gaurav" },
+            { category: "resource-management", suite: "CAM_IA", owner: "Naveen" },
+            { category: "resource-management", suite: "licenses_DisableOverage", owner: "Prerana" },
+            { category: "resource-management", suite: "Selective_Fetching", owner: "Naveen" },
+            { category: "resource-management", suite: "Platform_To_Endpoint_License_Conversion", owner: "Kaivalya" },
+            { category: "resource-management", suite: "APIMADMIN", owner: "Gaurav" },
+            { category: "resource-management", suite: "Usability", owner: "Gautham" },
+            { category: "resource-management", suite: "OpenApiSpec", owner: "Prerana" },
+            { category: "resource-management", suite: "ResourcePagination2", owner: "Gautham" },
+            { category: "resource-management", suite: "SSO_Clients", owner: "Prerana" },
+            { category: "resource-management", suite: "EndpointLicensing", owner: "Suman" },
+            { category: "resource-management", suite: "Stacks", owner: "Akhil" },
+            { category: "resource-management", suite: "ResourcePagination", owner: "Gautham" },
+            { category: "resource-management", suite: "Allow_Users_To_Download_All_Logs", owner: "Deepak" },
+            { category: "resource-management", suite: "Cloning", owner: "Gaurav" },
+            { category: "resource-management", suite: "Templates", owner: "Geethika" },
+            { category: "resource-management", suite: "FEATURED_TEMPLATES", owner: "Prerana" },
+            { category: "resource-management", suite: "PlatformLicenses", owner: "Suman" },
+            { category: "resource-management", suite: "RMS_Bugs", owner: "Gautham" },
+            { category: "resource-management", suite: "GOVERNANCE", owner: "Kaivalya" },
+            { category: "resource-management", suite: "MULTIENVIRONMENT_1", owner: "Kaivalya" },
+            { category: "resource-management", suite: "MULTIENVIRONMENT_3", owner: "Kaivalya" },
+            { category: "resource-management-PFExtension", suite: "IAF2.0", owner: "Swathi" },
+            { category: "resource-management-PFExtension", suite: "HTTP2.0", owner: "Shafeek" },
+            { category: "resource-management-PFExtension", suite: "IAF2.0_1", owner: "Khaisar" },
+            { category: "resource-management-PFExtension", suite: "PKCE_BE", owner: "Shafeek" },
+            { category: "resource-management-PFExtension", suite: "UI2API_IAF", owner: "Khaisar" },
+            { category: "resource-management-PFExtension", suite: "IAF2.0_2", owner: "Swathi" },
+            { category: "resource-management-PFExtension", suite: "IAF2.0_3", owner: "Swathi" },
+            { category: "resource-management-Platform", suite: "ILM_MULTIENV", owner: "Sathwika" },
+            { category: "resource-management-Platform", suite: "ResourceAliases", owner: "Anitha" },
+            { category: "resource-management-Platform", suite: "ILM", owner: "Anitha" },
+            { category: "salesforce-adaptor", suite: "SF_BULKAPI2", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "Salesforce_MS_Regression3", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "SF_MS", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "Salesforce", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "Salesforce_MS_Regression", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "Salesforce_MS_Regression2", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "SF_BULKAPI", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "SF_BULKAPI5", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "SF_bulk", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "SF_BULKAPI3", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "Salesforce_MS_Regression1", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "STANDALONE_SF", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "SF_BULKAPI4", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "STANDALONE", owner: "Sathwika" },
+            { category: "salesforce-adaptor", suite: "Connections", owner: "Sathwika" },
+            { category: "webhooks", suite: "webhook1", owner: "Gautham" },
+            { category: "webhooks", suite: "Webhook", owner: "Gautham" },
+            { category: "webhooks", suite: "webhook2", owner: "Gautham" },
+            { category: "webhooks", suite: "HUGE_RECORDS", owner: "Gautham" },
+            { category: "webhooks", suite: "STANDALONE", owner: "Gautham" },
+            { category: "worker", suite: "Flowbranching_router", owner: "Kaivalya" },
+            { category: "worker", suite: "FlowBranching_E2E_Flows", owner: "Kaivalya" },
+            { category: "worker", suite: "FlowBranching_Stability_Test_Cases", owner: "Kaivalya" },
+            { category: "worker", suite: "Flowbranching_router2", owner: "Kaivalya" },
+            { category: "lookup-cache", suite: "lookupcache1", owner: "Malla" },
+            { category: "lookup-cache", suite: "lookupcache2", owner: "Malla" },
+            { category: "lookup-cache", suite: "lookupcache_ilm", owner: "Malla" },
+            { category: "lookup-cache", suite: "lookupcache_multienv", owner: "Malla" },
+            { category: "lookup-cache", suite: "LOOKUPCACHE", owner: "Malla" },
+            { category: "lookup-cache", suite: "LOOKUPCACHE_1GB", owner: "Malla" },
+            { category: "FTP-BRIDGE-MS", suite: "FTP3", owner: "Shafeek" },
+            { category: "FTP-BRIDGE-MS", suite: "FTP2", owner: "Shafeek" },
+            { category: "FTP-BRIDGE-MS", suite: "FTP", owner: "Shafeek" },
+            { category: "Resource-management", suite: "email_rms", owner: "Gautham" }
+        ];
+
+        let ownerTabInitialized = false;
+        let selectedOwnerSuites = [];
+        let ownerSuiteResults = [];
+
+        // Initialize Owner tab when first shown
+        function initOwnerTab() {
+            if (ownerTabInitialized) return;
+            ownerTabInitialized = true;
+
+            // Get unique owners and sort them
+            const owners = [...new Set(OWNER_SUITE_MAPPING.map(m => m.owner).filter(o => o && o.trim()))].sort();
+            
+            const ownerSelect = document.getElementById('ownerSelect');
+            ownerSelect.innerHTML = '<option value="">-- Select an API Owner --</option>' +
+                owners.map(owner => {
+                    const count = OWNER_SUITE_MAPPING.filter(m => m.owner === owner).length;
+                    return `<option value="${owner}">${owner} (${count} suites)</option>`;
+                }).join('');
+
+            // Setup event listeners
+            const fetchBtn = document.getElementById('fetchOwnerSuitesBtn');
+            const dateFilter = document.getElementById('ownerDateFilter');
+            const clearDateBtn = document.getElementById('clearOwnerDateFilter');
+            const backBtn = document.getElementById('backToOwnerSuites');
+            const envSelect = document.getElementById('ownerEnvSelect');
+
+            ownerSelect.addEventListener('change', () => {
+                fetchBtn.disabled = !ownerSelect.value;
+                if (ownerSelect.value) {
+                    fetchOwnerSuites();
+                }
+            });
+
+            fetchBtn.addEventListener('click', fetchOwnerSuites);
+
+            dateFilter.addEventListener('change', () => {
+                if (ownerSelect.value) {
+                    fetchOwnerSuites();
+                }
+            });
+
+            clearDateBtn.addEventListener('click', () => {
+                dateFilter.value = '';
+                if (ownerSelect.value) {
+                    fetchOwnerSuites();
+                }
+            });
+
+            backBtn.addEventListener('click', () => {
+                document.getElementById('ownerSuiteDetailCard').classList.add('hidden');
+                document.getElementById('ownerSuitesContainer').classList.remove('hidden');
+            });
+
+            envSelect.addEventListener('change', () => {
+                if (ownerSelect.value) {
+                    fetchOwnerSuites();
+                }
+            });
+        }
+
+        async function fetchOwnerSuites() {
+            const ownerSelect = document.getElementById('ownerSelect');
+            const dateFilter = document.getElementById('ownerDateFilter').value;
+            const envSelect = document.getElementById('ownerEnvSelect');
+            const selectedOwner = ownerSelect.value;
+            const selectedEnv = envSelect.value; // 'staging', 'qa', 'iaqa'
+
+            if (!selectedOwner) return;
+
+            // Show loading state
+            document.getElementById('ownerEmptyState').classList.add('hidden');
+            document.getElementById('ownerSuitesContainer').classList.add('hidden');
+            document.getElementById('ownerSuiteDetailCard').classList.add('hidden');
+            document.getElementById('ownerLoadingState').classList.remove('hidden');
+
+            // Get suites for this owner from the CSV mapping
+            selectedOwnerSuites = OWNER_SUITE_MAPPING.filter(m => m.owner === selectedOwner);
+            
+            console.log(`Fetching REST API reports for owner: ${selectedOwner}, env: ${selectedEnv}, date: ${dateFilter || 'any'}`);
+            console.log(`Found ${selectedOwnerSuites.length} suites for owner`);
+
+            try {
+                // Fetch report folders for each suite from REST API Reports portal
+                const results = [];
+                const batchSize = 15; // Increased from 5 for faster parallel processing
+
+                // Get all unique main folders (categories) for searching COMMON_SUITES
+                const allMainFolders = [...new Set(OWNER_SUITE_MAPPING.map(m => m.category))];
+                
+                // Suites that need to search across all folders (not just their listed category)
+                const SEARCH_ALL_FOLDERS_SUITES = [
+                    'Phase_0_SampleIntegration_Install',  // Listed in authentication-service but exists in resource-management
+                ];
+                
+                // OPTIMIZATION: Cache for folder listings to avoid duplicate fetches
+                const folderCache = new Map();
+                const dateFolderCache = new Map();
+                
+                // Helper function to fetch and cache env folder listing
+                async function getCachedEnvFolder(category) {
+                    const basePath = `/${category}/${selectedEnv}`;
+                    const cacheKey = basePath;
+                    
+                    if (folderCache.has(cacheKey)) {
+                        return folderCache.get(cacheKey);
+                    }
+                    
+                    try {
+                        const response = await fetch(`${REST_REPORTS_CONFIG.baseUrl}/?path=/var/www/html${basePath}`);
+                        if (!response.ok) {
+                            folderCache.set(cacheKey, null);
+                            return null;
+                        }
+                        const html = await response.text();
+                        const dateFolders = parseDateFolders(html, basePath, dateFilter);
+                        folderCache.set(cacheKey, { basePath, dateFolders });
+                        return { basePath, dateFolders };
+                    } catch (e) {
+                        folderCache.set(cacheKey, null);
+                        return null;
+                    }
+                }
+                
+                // Helper function to fetch and cache date folder contents
+                async function getCachedDateFolder(folderPath) {
+                    if (dateFolderCache.has(folderPath)) {
+                        return dateFolderCache.get(folderPath);
+                    }
+                    
+                    try {
+                        const response = await fetch(`${REST_REPORTS_CONFIG.baseUrl}/?path=/var/www/html${folderPath}`);
+                        if (!response.ok) {
+                            dateFolderCache.set(folderPath, null);
+                            return null;
+                        }
+                        const html = await response.text();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const rows = doc.querySelectorAll('table tr');
+                        const suites = [];
+                        rows.forEach(row => {
+                            const cells = row.querySelectorAll('td');
+                            if (cells.length >= 2) {
+                                const nameCell = cells[1]?.textContent?.trim();
+                                if (nameCell && !nameCell.includes('Back to Parent')) {
+                                    suites.push(nameCell);
+                                }
+                            }
+                        });
+                        dateFolderCache.set(folderPath, suites);
+                        return suites;
+                    } catch (e) {
+                        dateFolderCache.set(folderPath, null);
+                        return null;
+                    }
+                }
+                
+                // OPTIMIZATION: Pre-fetch all unique category folders in parallel
+                const uniqueCategories = [...new Set(selectedOwnerSuites.map(s => s.category))];
+                const hasSearchAllSuites = selectedOwnerSuites.some(s => 
+                    s.category.toUpperCase() === 'COMMON_SUITES' || SEARCH_ALL_FOLDERS_SUITES.includes(s.suite)
+                );
+                
+                // Pre-fetch categories needed
+                const categoriesToFetch = hasSearchAllSuites ? allMainFolders : uniqueCategories;
+                console.log(`Pre-fetching ${categoriesToFetch.length} category folders...`);
+                await Promise.all(categoriesToFetch.map(cat => getCachedEnvFolder(cat)));
+                console.log(`Pre-fetch complete. Processing ${selectedOwnerSuites.length} suites...`);
+                
+                // Process all suites in parallel batches
+                for (let i = 0; i < selectedOwnerSuites.length; i += batchSize) {
+                    const batch = selectedOwnerSuites.slice(i, i + batchSize);
+                    const batchPromises = batch.map(async (suiteInfo) => {
+                        try {
+                            // For COMMON_SUITES or special suites, search across all main folders
+                            const isCommonSuite = suiteInfo.category.toUpperCase() === 'COMMON_SUITES';
+                            const isSearchAllSuite = SEARCH_ALL_FOLDERS_SUITES.includes(suiteInfo.suite);
+                            const shouldSearchAll = isCommonSuite || isSearchAllSuite;
+                            const foldersToSearch = shouldSearchAll ? allMainFolders : [suiteInfo.category];
+                            
+                            const validReportFolders = [];
+                            let foundInCategory = null;
+                            
+                            for (const searchCategory of foldersToSearch) {
+                                const envData = await getCachedEnvFolder(searchCategory);
+                                if (!envData) continue;
+                                
+                                const { basePath, dateFolders } = envData;
+                                
+                                // OPTIMIZATION: Only check latest 2 date folders instead of 5
+                                for (const folder of dateFolders.slice(0, 2)) {
+                                    const suites = await getCachedDateFolder(folder.path);
+                                    if (!suites) continue;
+                                    
+                                    // Find matching suite (case-insensitive)
+                                    const matchingSuite = suites.find(s => 
+                                        s.toLowerCase() === suiteInfo.suite.toLowerCase()
+                                    );
+                                    
+                                    if (matchingSuite) {
+                                        validReportFolders.push({
+                                            ...folder,
+                                            suitePath: `${folder.path}/${matchingSuite}`,
+                                            foundCategory: searchCategory
+                                        });
+                                        foundInCategory = searchCategory;
+                                    }
+                                }
+                                
+                                // If we found reports for search-all suite, stop searching
+                                if (shouldSearchAll && validReportFolders.length > 0) {
+                                    break;
+                                }
+                            }
+                            
+                            return {
+                                ...suiteInfo,
+                                basePath: foundInCategory ? `/${foundInCategory}/${selectedEnv}` : `/${suiteInfo.category}/${selectedEnv}`,
+                                actualCategory: foundInCategory || suiteInfo.category,
+                                reportFolders: validReportFolders,
+                                latestReport: validReportFolders.length > 0 ? validReportFolders[0] : null
+                            };
+                        } catch (e) {
+                            console.error(`Error fetching suite ${suiteInfo.suite}:`, e);
+                            return {
+                                ...suiteInfo,
+                                basePath: `/${suiteInfo.category}/${selectedEnv}`,
+                                actualCategory: suiteInfo.category,
+                                reportFolders: [],
+                                latestReport: null
+                            };
+                        }
+                    });
+
+                    const batchResults = await Promise.all(batchPromises);
+                    results.push(...batchResults);
+                }
+
+                ownerSuiteResults = results;
+                renderOwnerSuitesREST(results, selectedOwner, dateFilter, selectedEnv);
+
+            } catch (e) {
+                console.error('Error fetching owner suites:', e);
+                document.getElementById('ownerLoadingState').classList.add('hidden');
+                document.getElementById('ownerEmptyState').classList.remove('hidden');
+            }
+        }
+
+        // Parse REST API Reports directory listing to find date folders
+        function parseDateFolders(html, basePath, dateFilter) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const rows = doc.querySelectorAll('table tr');
+            const folders = [];
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 3) {
+                    const typeCell = cells[0].textContent.trim();
+                    const nameCell = cells[1].textContent.trim();
+                    const linkCell = cells[2].querySelector('a');
+
+                    if (nameCell && linkCell && typeCell.includes('Directory') && !nameCell.includes('Back to Parent')) {
+                        // Folder names are like: Dec_08_2025_22_43_authentication-service_2613
+                        const folderName = nameCell;
+                        
+                        // Extract date from folder name (format: Mon_DD_YYYY)
+                        const dateMatch = folderName.match(/([A-Za-z]{3})_(\d{2})_(\d{4})/);
+                        let folderDate = null;
+                        if (dateMatch) {
+                            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            const monthIndex = monthNames.indexOf(dateMatch[1]);
+                            if (monthIndex !== -1) {
+                                folderDate = `${dateMatch[3]}-${String(monthIndex + 1).padStart(2, '0')}-${dateMatch[2]}`;
+                            }
+                        }
+
+                        // If date filter is set, only include matching folders
+                        if (dateFilter && folderDate !== dateFilter) {
+                            return;
+                        }
+
+                        folders.push({
+                            name: folderName,
+                            path: `${basePath}/${folderName}`,
+                            date: folderDate,
+                            displayDate: dateMatch ? `${dateMatch[1]} ${dateMatch[2]}, ${dateMatch[3]}` : null
+                        });
+                    }
+                }
+            });
+
+            // Sort by date (newest first) - also by folder name to get latest run
+            folders.sort((a, b) => {
+                if (!a.date || !b.date) return 0;
+                // First sort by date, then by folder name (which includes time)
+                const dateCompare = b.date.localeCompare(a.date);
+                if (dateCompare !== 0) return dateCompare;
+                return b.name.localeCompare(a.name);
+            });
+
+            return folders;
+        }
+
+        function generatePossibleSuiteNames(suiteInfo) {
+            const { category, suite } = suiteInfo;
+            // ReportPortal uses format: "CATEGORY SUITENAME AUTOMATION TESTS STAGING"
+            // e.g., "EDI-SUITES EDI2 AUTOMATION TESTS STAGING"
+            // Underscores in CSV suite names become spaces in ReportPortal
+            // Categories keep their hyphens
+            
+            const catUpper = category.toUpperCase();
+            // Replace underscores with spaces and uppercase
+            const suiteNoUnderscores = suite.replace(/_/g, ' ').toUpperCase();
+            // Keep dots in version numbers like "2.0"
+            const suiteFormatted = suiteNoUnderscores;
+            
+            const names = [
+                // Primary pattern: CATEGORY SUITE AUTOMATION TESTS STAGING
+                `${catUpper} ${suiteFormatted} AUTOMATION TESTS STAGING`,
+                // With original case
+                `${catUpper} ${suite.replace(/_/g, ' ')} AUTOMATION TESTS STAGING`,
+                // Try with underscores kept
+                `${catUpper} ${suite.toUpperCase()} AUTOMATION TESTS STAGING`,
+                // Without category
+                `${suiteFormatted} AUTOMATION TESTS STAGING`,
+                // Alternative category formats
+                `${catUpper.replace(/-/g, ' ')} ${suiteFormatted} AUTOMATION TESTS STAGING`,
+                // Exact matches
+                suite,
+                suite.toUpperCase(),
+                suite.replace(/_/g, ' '),
+                suite.replace(/_/g, ' ').toUpperCase()
+            ];
+            
+            console.log(`Trying suite names for ${category}/${suite}:`, names.slice(0, 3));
+            return names;
+        }
+
+        function renderOwnerSuitesREST(results, ownerName, dateFilter, selectedEnv) {
+            document.getElementById('ownerLoadingState').classList.add('hidden');
+            document.getElementById('ownerSuitesContainer').classList.remove('hidden');
+
+            // Update header
+            document.getElementById('selectedOwnerName').textContent = ownerName;
+            
+            // Calculate stats
+            const suitesWithReports = results.filter(r => r.latestReport);
+            
+            document.getElementById('selectedOwnerStats').textContent = 
+                dateFilter 
+                    ? `${suitesWithReports.length} suites with reports on ${formatDateDisplay(dateFilter)}`
+                    : `${results.length} assigned suites • ${suitesWithReports.length} with reports`;
+
+            document.getElementById('ownerPassedCount').textContent = suitesWithReports.length;
+            document.getElementById('ownerFailedCount').textContent = results.length - suitesWithReports.length;
+            document.getElementById('ownerTotalCount').textContent = results.length;
+
+            // Render grid
+            const grid = document.getElementById('ownerSuitesGrid');
+            
+            if (results.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-owner-suites" style="grid-column: 1 / -1;">
+                        <div class="no-owner-suites-icon">📭</div>
+                        <h4>No Suites Found</h4>
+                        <p>No test suites are assigned to this owner.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort: suites with reports first, then by category
+            const sortedResults = [...results].sort((a, b) => {
+                if (!a.latestReport && !b.latestReport) return a.category.localeCompare(b.category);
+                if (!a.latestReport) return 1;
+                if (!b.latestReport) return -1;
+                return 0;
+            });
+            
+            // Store sorted results for click handling
+            window.sortedOwnerResults = sortedResults;
+            
+            grid.innerHTML = sortedResults.map((result, index) => {
+                const hasReport = result.latestReport !== null;
+                const status = hasReport ? 'has-report' : 'no-runs';
+                const reportCount = result.reportFolders?.length || 0;
+                const isCommonSuite = result.category.toUpperCase() === 'COMMON_SUITES';
+                const SEARCH_ALL_FOLDERS_SUITES = ['Phase_0_SampleIntegration_Install'];
+                const isSearchAllSuite = SEARCH_ALL_FOLDERS_SUITES.includes(result.suite);
+                const shouldSearchAll = isCommonSuite || isSearchAllSuite;
+                const actualCategory = result.actualCategory || result.category;
+                const foundInDifferentFolder = shouldSearchAll && hasReport && actualCategory !== result.category;
+                
+                return `
+                    <div class="owner-suite-card ${status}" 
+                         data-index="${index}"
+                         data-has-report="${hasReport}">
+                        <div class="owner-suite-card-header">
+                            <div class="owner-suite-name">
+                                <span class="suite-category">${result.category}</span>
+                                <span>${result.suite}</span>
+                            </div>
+                            <div class="owner-suite-status ${hasReport ? 'passed' : 'no-runs'}">
+                                ${hasReport ? `${reportCount} Report${reportCount > 1 ? 's' : ''}` : 'No Reports'}
+                            </div>
+                        </div>
+                        ${hasReport ? `
+                            <div class="owner-suite-stats">
+                                <span style="color: var(--accent-cyan)">📅 ${result.latestReport.displayDate || 'Recent'}</span>
+                                ${foundInDifferentFolder ? `<span style="color: var(--accent-purple)">📁 Found in: ${actualCategory}</span>` : ''}
+                            </div>
+                            <div class="owner-suite-meta">
+                                <span>📂 ${selectedEnv}</span>
+                                <span>🔗 Click to view</span>
+                                <a href="https://portal_user:celigo%40123@reporting-portal.qa.staging.integrator.io${result.latestReport.suitePath}/index.html" 
+                                   target="_blank" 
+                                   class="direct-report-link"
+                                   onclick="event.stopPropagation();"
+                                   title="Open Report Directly">🔗</a>
+                            </div>
+                        ` : `
+                            <div class="owner-suite-stats" style="color: var(--text-muted)">
+                                ${shouldSearchAll ? 'Searched all folders - No reports found' : `No reports found in ${selectedEnv}`}
+                            </div>
+                            <div class="owner-suite-meta">
+                                <span style="color: var(--text-muted)">📂 ${result.basePath}</span>
+                            </div>
+                        `}
+                    </div>
+                `;
+            }).join('');
+            
+            // Add click handlers to suite cards
+            grid.querySelectorAll('.owner-suite-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const index = parseInt(card.dataset.index);
+                    const hasReport = card.dataset.hasReport === 'true';
+                    const result = window.sortedOwnerResults[index];
+                    
+                    if (hasReport && result && result.latestReport) {
+                        // Open the report in a new tab
+                        const reportUrl = `https://portal_user:celigo%40123@reporting-portal.qa.staging.integrator.io${result.latestReport.suitePath}/index.html`;
+                        window.open(reportUrl, '_blank');
+                    } else if (result) {
+                        // Show all report folders for this suite
+                        showOwnerSuiteFolders(result);
+                    }
+                });
+            });
+        }
+
+        // Show available report folders for a suite
+        function showOwnerSuiteFolders(result) {
+            const selectedEnv = document.getElementById('ownerEnvSelect').value;
+            
+            if (result.reportFolders && result.reportFolders.length > 0) {
+                // Show list of available reports
+                document.getElementById('ownerSuitesContainer').classList.add('hidden');
+                
+                const detailCard = document.getElementById('ownerSuiteDetailCard');
+                detailCard.innerHTML = `
+                    <div class="report-header">
+                        <button class="back-btn" onclick="backToOwnerSuitesList()">← Back to API Owners</button>
+                        <div class="report-title">${result.category} / ${result.suite}</div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--accent-cyan);">📁 Available Reports (${result.reportFolders.length})</h4>
+                        <div class="reports-grid">
+                            ${result.reportFolders.map(folder => `
+                                <div class="report-card-mini passed" style="cursor: pointer;" 
+                                     onclick="window.open('https://portal_user:celigo%40123@reporting-portal.qa.staging.integrator.io${folder.suitePath}/index.html', '_blank')">
+                                    <div class="report-card-mini-header">
+                                        <div class="report-card-mini-title">
+                                            <span>📅 ${folder.displayDate || 'Report'}</span>
+                                        </div>
+                                    </div>
+                                    <div class="report-card-mini-meta">
+                                        <span>${folder.name}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                detailCard.classList.remove('hidden');
+            } else {
+                // Open the base folder in REST API Reports tab
+                alert(`No reports found for ${result.suite} in ${selectedEnv}.\n\nPath: ${result.basePath}`);
+            }
+        }
+
+        function backToOwnerSuitesList() {
+            document.getElementById('ownerSuiteDetailCard').classList.add('hidden');
+            document.getElementById('ownerSuitesContainer').classList.remove('hidden');
+        }
+
+        async function showOwnerSuiteDetail(result) {
+            if (!result.launch) {
+                // No launch data, nothing to show
+                return;
+            }
+
+            document.getElementById('ownerSuitesContainer').classList.add('hidden');
+            document.getElementById('ownerLoadingState').classList.remove('hidden');
+
+            const launch = result.launch;
+            const stats = launch.statistics?.executions || {};
+
+            // Update detail card
+            document.getElementById('ownerDetailSuiteName').textContent = result.suite;
+            document.getElementById('ownerDetailStatus').textContent = launch.status;
+            document.getElementById('ownerDetailStatus').className = `status-badge ${launch.status.toLowerCase()}`;
+            document.getElementById('ownerDetailTotal').textContent = stats.total || 0;
+            document.getElementById('ownerDetailPassed').textContent = stats.passed || 0;
+            document.getElementById('ownerDetailFailed').textContent = stats.failed || 0;
+            document.getElementById('ownerDetailDuration').textContent = Math.round((launch.approximateDuration || 0) / 60) + 'm';
+            document.getElementById('ownerDetailLaunchId').textContent = launch.id;
+            document.getElementById('ownerDetailRunNumber').textContent = '#' + launch.number;
+            document.getElementById('ownerDetailBuildDate').textContent = launch.attributes?.find(a => a.key === 'Build')?.value || 'N/A';
+            document.getElementById('ownerDetailOwner').textContent = launch.owner || result.owner;
+            document.getElementById('ownerDetailPlatform').textContent = launch.attributes?.find(a => a.key === 'Platform')?.value || 'N/A';
+            
+            const selectedEnv = document.getElementById('ownerEnvSelect').value;
+            document.getElementById('ownerDetailLink').href = `${CONFIG.RP_DIRECT}/ui/#${selectedEnv}/launches/all/${launch.id}`;
+
+            // Fetch failed tests if any
+            if (stats.failed > 0) {
+                try {
+                    const failedResponse = await fetch(
+                        `${CONFIG.RP_HOST}/api/v1/${selectedEnv}/item?filter.eq.launchId=${launch.id}&filter.eq.status=FAILED&page.size=20`
+                    );
+                    const failedData = await failedResponse.json();
+                    const failedTests = failedData.content.filter(i => i.type === 'STEP');
+
+                    document.getElementById('ownerDetailFailedList').innerHTML = failedTests.map((test, i) => `
+                        <div class="failed-test-item">
+                            <div class="failed-test-num">${i + 1}</div>
+                            <div class="failed-test-name">${test.name}</div>
+                        </div>
+                    `).join('');
+                    document.getElementById('ownerDetailFailedPanel').classList.remove('hidden');
+                } catch (e) {
+                    console.error('Error fetching failed tests:', e);
+                    document.getElementById('ownerDetailFailedPanel').classList.add('hidden');
+                }
+            } else {
+                document.getElementById('ownerDetailFailedPanel').classList.add('hidden');
+            }
+
+            document.getElementById('ownerLoadingState').classList.add('hidden');
+            document.getElementById('ownerSuiteDetailCard').classList.remove('hidden');
+        }
+
+        // Update tab setup to include Owner tab initialization
+        const originalSetupTabs = setupTabs;
+        setupTabs = function() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+
+                    // Initialize tabs on first view
+                    if (btn.dataset.tab === 'restapi' && !restApiInitialized) {
+                        restApiInitialized = true;
+                        setupRestApiReportsListeners();
+                        initRestApiReports();
+                    }
+                    
+                    if (btn.dataset.tab === 'owner' && !ownerTabInitialized) {
+                        initOwnerTab();
+                    }
+                });
+            });
+        };
 
 
     </script>
