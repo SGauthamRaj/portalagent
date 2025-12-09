@@ -9,22 +9,22 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #050508;
-            --bg-card: #0d0f14;
-            --bg-hover: #141820;
-            --accent-cyan: #00f0ff;
-            --accent-green: #00ff88;
-            --accent-red: #ff3860;
-            --accent-yellow: #ffdd00;
-            --accent-purple: #bd00ff;
-            --accent-orange: #ff9500;
-            --text-primary: #ffffff;
-            --text-secondary: #7a8599;
-            --border: #1e2433;
-            --glow-cyan: 0 0 30px rgba(0, 240, 255, 0.4);
-            --glow-green: 0 0 30px rgba(0, 255, 136, 0.4);
-            --glow-red: 0 0 30px rgba(255, 56, 96, 0.4);
-            --glow-purple: 0 0 30px rgba(189, 0, 255, 0.4);
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-hover: #334155;
+            --accent-cyan: #06b6d4;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-yellow: #eab308;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #f97316;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #475569;
+            --glow-cyan: 0 0 25px rgba(6, 182, 212, 0.35);
+            --glow-green: 0 0 25px rgba(34, 197, 94, 0.35);
+            --glow-red: 0 0 25px rgba(239, 68, 68, 0.35);
+            --glow-purple: 0 0 25px rgba(139, 92, 246, 0.35);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1156,6 +1156,9 @@
             <button class="tab-btn" data-tab="owner">
                 <span>🔌</span> API Owners
             </button>
+            <button class="tab-btn" data-tab="uiowner">
+                <span>🖥️</span> UI Owners
+            </button>
             <button class="tab-btn" data-tab="restapi">
                 <span>🗂️</span> REST API Reports
             </button>
@@ -1338,6 +1341,78 @@
         </div>
 
         <!-- REST API Reports Tab -->
+        
+        <!-- UI Owners Tab -->
+        <div class="tab-content" id="uiownerTab">
+            <div class="owner-controls">
+                <div class="form-group">
+                    <label>Environment</label>
+                    <div class="select-wrapper">
+                        <select id="uiOwnerEnvSelect">
+                            <option value="staging">Staging</option>
+                            <option value="qa">QA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Owner</label>
+                    <div class="select-wrapper">
+                        <select id="uiOwnerSelect">
+                            <option value="">-- Select a UI Owner --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Filter by Date</label>
+                    <div class="date-picker-wrapper">
+                        <input type="date" id="uiOwnerDateFilter" class="date-picker-input">
+                        <button id="clearUiOwnerDateFilter" class="clear-date-btn-inline" title="Clear date">✕</button>
+                    </div>
+                </div>
+                <button class="btn-primary" id="fetchUiOwnerSuitesBtn" disabled>
+                    <span>🔍</span> Get Suites
+                </button>
+            </div>
+
+            <div id="uiOwnerEmptyState" class="empty-state">
+                <div class="empty-state-icon">🖥️</div>
+                <h3>Select a UI Owner</h3>
+                <p>Choose an environment, UI owner, and optionally a date to view their UI test suites</p>
+            </div>
+
+            <div id="uiOwnerLoadingState" class="loading-state hidden">
+                <div class="spinner"></div>
+                <p>Fetching UI owner suites...</p>
+            </div>
+
+            <div id="uiOwnerSuitesContainer" class="owner-suites-container hidden">
+                <div class="owner-suites-header">
+                    <div class="owner-info">
+                        <span class="owner-avatar">👤</span>
+                        <div class="owner-details">
+                            <h3 id="selectedUiOwnerName">-</h3>
+                            <span id="selectedUiOwnerStats" class="owner-stats">-</span>
+                        </div>
+                    </div>
+                    <div class="owner-summary">
+                        <div class="summary-stat passed">
+                            <span class="summary-value" id="uiOwnerPassedCount">0</span>
+                            <span class="summary-label">With Reports</span>
+                        </div>
+                        <div class="summary-stat failed">
+                            <span class="summary-value" id="uiOwnerFailedCount">0</span>
+                            <span class="summary-label">No Reports</span>
+                        </div>
+                        <div class="summary-stat total">
+                            <span class="summary-value" id="uiOwnerTotalCount">0</span>
+                            <span class="summary-label">Total Suites</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="owner-suites-grid" id="uiOwnerSuitesGrid"></div>
+            </div>
+        </div>
+
         <div class="tab-content" id="restapiTab">
             <div class="restapi-controls">
                 <button class="back-btn hidden" id="restapiBackBtn">← Back</button>
@@ -2440,6 +2515,102 @@
             { category: "FTP-BRIDGE-MS", suite: "FTP", owner: "Shafeek" },
             { category: "Resource-management", suite: "email_rms", owner: "Gautham" }
         ];
+        // UI Suite Owner Mapping from CSV data
+        const UI_OWNER_SUITE_MAPPING = [
+            // Aurora Team
+            { team: "Aurora", suite: "MFA", owner: "Manish" },
+            { team: "Aurora", suite: "FLOWGROUPING_IAF", owner: "Manish" },
+            { team: "Aurora", suite: "email_suite", owner: "Manish" },
+            { team: "Aurora", suite: "EMAIL_NOTIFICATION", owner: "Manish" },
+            { team: "Aurora", suite: "email_validation", owner: "Manish" },
+            { team: "Aurora", suite: "ftp_standalone_suite", owner: "Manish" },
+            { team: "Aurora", suite: "ILM_INTEGRATION2", owner: "Manish" },
+            { team: "Aurora", suite: "APIMMULTIENV", owner: "Manish" },
+            { team: "Aurora", suite: "DI", owner: "Manish" },
+            // Chloris Team
+            { team: "Chloris", suite: "MFA2", owner: "Revathi" },
+            { team: "Chloris", suite: "integration_apps", owner: "Revathi" },
+            { team: "Chloris", suite: "account_switching", owner: "Revathi" },
+            { team: "Chloris", suite: "MFA_ADMIN", owner: "Revathi" },
+            { team: "Chloris", suite: "create_flows2", owner: "Revathi" },
+            { team: "Chloris", suite: "MAY_PHOENIX", owner: "Revathi" },
+            { team: "Chloris", suite: "afe", owner: "Revathi" },
+            { team: "Chloris", suite: "phoenix_phase0", owner: "Revathi" },
+            { team: "Chloris", suite: "api_builder", owner: "Revathi" },
+            { team: "Chloris", suite: "Api_Suite1", owner: "Revathi" },
+            { team: "Chloris", suite: "custom_suite", owner: "Revathi" },
+            { team: "Chloris", suite: "APIM", owner: "Revathi" },
+            { team: "Chloris", suite: "REST_HTTP", owner: "Revathi" },
+            { team: "Chloris", suite: "simple_view", owner: "Revathi" },
+            { team: "Chloris", suite: "Manage_few_suite", owner: "Revathi" },
+            // Helios Team
+            { team: "Helios", suite: "admin_suite", owner: "Shriti" },
+            { team: "Helios", suite: "manage_suite", owner: "Shriti" },
+            { team: "Helios", suite: "Databases", owner: "Shriti" },
+            { team: "Helios", suite: "ILM_INTEGRATION", owner: "Shriti" },
+            { team: "Helios", suite: "FlowDebugger", owner: "Shriti" },
+            { team: "Helios", suite: "NSTHIRDPARTY", owner: "Shriti" },
+            { team: "Helios", suite: "user_notify", owner: "Phani" },
+            { team: "Helios", suite: "assignErrors", owner: "Phani" },
+            { team: "Helios", suite: "monitor_suite", owner: "Phani" },
+            { team: "Helios", suite: "create_flows_suite1_user", owner: "Phani" },
+            { team: "Helios", suite: "general", owner: "Phani" },
+            { team: "Helios", suite: "uiux_suite03", owner: "Phani" },
+            { team: "Helios", suite: "connections", owner: "Phani" },
+            { team: "Helios", suite: "edi_suite", owner: "Phani" },
+            { team: "Helios", suite: "flowbranching01", owner: "Phani" },
+            { team: "Helios", suite: "edit_flows", owner: "Phani" },
+            // Eirene Team
+            { team: "Eirene", suite: "FlowBuilder04", owner: "Mahesh" },
+            { team: "Eirene", suite: "uiux_suite02", owner: "Mahesh" },
+            { team: "Eirene", suite: "httpConnector2.0", owner: "Mahesh" },
+            { team: "Eirene", suite: "standalone1", owner: "Mahesh" },
+            { team: "Eirene", suite: "standalone7", owner: "Mahesh" },
+            { team: "Eirene", suite: "FlowBuilder", owner: "Mahesh" },
+            { team: "Eirene", suite: "standalone6", owner: "Mahesh" },
+            // Hercules Team
+            { team: "Hercules", suite: "e2e_flows", owner: "Subarna" },
+            { team: "Hercules", suite: "NETSUITE_SS2.0", owner: "Mahesh" },
+            { team: "Hercules", suite: "CeligoAI", owner: "Subarna" },
+            { team: "Hercules", suite: "mapper2.0", owner: "Subarna" },
+            { team: "Hercules", suite: "standalone5", owner: "Subarna" },
+            { team: "Hercules", suite: "mapper2.0_2", owner: "Subarna" },
+            { team: "Hercules", suite: "em2_2", owner: "Phani" },
+            { team: "Hercules", suite: "Template", owner: "Shriti" },
+            { team: "Hercules", suite: "em2", owner: "Shriti" },
+            { team: "Hercules", suite: "standalone4", owner: "Shriti" },
+            { team: "Hercules", suite: "FlowEventReport", owner: "Vikram" },
+            { team: "Hercules", suite: "userManagement", owner: "Subarna" },
+            // Iris Team
+            { team: "Iris", suite: "transferSBflow", owner: "Vikram" },
+            { team: "Iris", suite: "HTTP2DOT0", owner: "Vikram" },
+            { team: "Iris", suite: "signoutPage", owner: "Vikram" },
+            { team: "Iris", suite: "pricing_model_suite", owner: "Vikram" },
+            { team: "Iris", suite: "uiux_suite01", owner: "Vikram" },
+            { team: "Iris", suite: "onprem", owner: "Vikram" },
+            { team: "Iris", suite: "transfer", owner: "Vikram" },
+            { team: "Iris", suite: "flowbranching", owner: "Vikram" },
+            { team: "Iris", suite: "edit_flows_2", owner: "Vikram" },
+            // Phoenix Team
+            { team: "Phoenix", suite: "account", owner: "Sagna" },
+            { team: "Phoenix", suite: "signinpage", owner: "Sagna" },
+            { team: "Phoenix", suite: "js-runtime", owner: "Sagna" },
+            { team: "Phoenix", suite: "edit_connections", owner: "Sagna" },
+            { team: "Phoenix", suite: "new UI", owner: "Sagna" },
+            { team: "Phoenix", suite: "flowbuilder01", owner: "Sagna" },
+            { team: "Phoenix", suite: "flowbuilder02", owner: "Sagna" },
+            { team: "Phoenix", suite: "flowbuilder03", owner: "Sagna" },
+            { team: "Phoenix", suite: "standalone2", owner: "Sagna" },
+            { team: "Phoenix", suite: "standalone3", owner: "Sagna" },
+            { team: "Phoenix", suite: "support_access", owner: "Sagna" },
+            { team: "Phoenix", suite: "Multipleenvs", owner: "Sagna" },
+            { team: "Phoenix", suite: "Multipleenvsinvited", owner: "Sagna" },
+        ];
+
+        // UI Owners Tab Variables
+        let uiOwnerTabInitialized = false;
+        let selectedUiOwnerSuites = [];
+        let uiOwnerSuiteResults = [];
 
         let ownerTabInitialized = false;
         let selectedOwnerSuites = [];
@@ -2453,10 +2624,17 @@
             // Get unique owners and sort them
             const owners = [...new Set(OWNER_SUITE_MAPPING.map(m => m.owner).filter(o => o && o.trim()))].sort();
             
+            // Helper function to count unique suites (case-insensitive) for an owner
+            function getUniqueSuiteCount(owner) {
+                const ownerSuites = OWNER_SUITE_MAPPING.filter(m => m.owner === owner);
+                const uniqueNames = new Set(ownerSuites.map(m => m.suite.toLowerCase()));
+                return uniqueNames.size;
+            }
+            
             const ownerSelect = document.getElementById('ownerSelect');
             ownerSelect.innerHTML = '<option value="">-- Select an API Owner --</option>' +
                 owners.map(owner => {
-                    const count = OWNER_SUITE_MAPPING.filter(m => m.owner === owner).length;
+                    const count = getUniqueSuiteCount(owner);
                     return `<option value="${owner}">${owner} (${count} suites)</option>`;
                 }).join('');
 
@@ -2517,7 +2695,17 @@
             document.getElementById('ownerLoadingState').classList.remove('hidden');
 
             // Get suites for this owner from the CSV mapping
-            selectedOwnerSuites = OWNER_SUITE_MAPPING.filter(m => m.owner === selectedOwner);
+            // Deduplicate by suite name (case-insensitive) - keep the first occurrence if same suite appears in multiple categories
+            const ownerSuitesRaw = OWNER_SUITE_MAPPING.filter(m => m.owner === selectedOwner);
+            const seenSuiteNames = new Set();
+            selectedOwnerSuites = ownerSuitesRaw.filter(m => {
+                const normalizedName = m.suite.toLowerCase();
+                if (seenSuiteNames.has(normalizedName)) {
+                    return false; // Skip duplicate suite name (case-insensitive)
+                }
+                seenSuiteNames.add(normalizedName);
+                return true;
+            });
             
             console.log(`Fetching REST API reports for owner: ${selectedOwner}, env: ${selectedEnv}, date: ${dateFilter || 'any'}`);
             console.log(`Found ${selectedOwnerSuites.length} suites for owner`);
@@ -2938,6 +3126,299 @@
             document.getElementById('ownerSuitesContainer').classList.remove('hidden');
         }
 
+        // ==================== UI OWNERS TAB ====================
+        function initUiOwnerSuitesTab() {
+            if (uiOwnerTabInitialized) return;
+            uiOwnerTabInitialized = true;
+
+            // Get unique owners and sort them
+            const owners = [...new Set(UI_OWNER_SUITE_MAPPING.map(m => m.owner).filter(o => o && o.trim()))].sort();
+            
+            // Helper function to count unique suites (case-insensitive) for an owner
+            function getUniqueUiSuiteCount(owner) {
+                const ownerSuites = UI_OWNER_SUITE_MAPPING.filter(m => m.owner === owner);
+                const uniqueNames = new Set(ownerSuites.map(m => m.suite.toLowerCase()));
+                return uniqueNames.size;
+            }
+            
+            const uiOwnerSelect = document.getElementById('uiOwnerSelect');
+            uiOwnerSelect.innerHTML = '<option value="">-- Select a UI Owner --</option>' +
+                owners.map(owner => {
+                    const count = getUniqueUiSuiteCount(owner);
+                    return `<option value="${owner}">${owner} (${count} suites)</option>`;
+                }).join('');
+
+            // Setup event listeners
+            const fetchBtn = document.getElementById('fetchUiOwnerSuitesBtn');
+            const dateFilter = document.getElementById('uiOwnerDateFilter');
+            const clearDateBtn = document.getElementById('clearUiOwnerDateFilter');
+            const envSelect = document.getElementById('uiOwnerEnvSelect');
+
+            uiOwnerSelect.addEventListener('change', () => {
+                fetchBtn.disabled = !uiOwnerSelect.value;
+                if (uiOwnerSelect.value) {
+                    fetchUiOwnerSuites();
+                }
+            });
+
+            fetchBtn.addEventListener('click', fetchUiOwnerSuites);
+
+            dateFilter.addEventListener('change', () => {
+                if (uiOwnerSelect.value) {
+                    fetchUiOwnerSuites();
+                }
+            });
+
+            clearDateBtn.addEventListener('click', () => {
+                dateFilter.value = '';
+                if (uiOwnerSelect.value) {
+                    fetchUiOwnerSuites();
+                }
+            });
+
+            envSelect.addEventListener('change', () => {
+                if (uiOwnerSelect.value) {
+                    fetchUiOwnerSuites();
+                }
+            });
+        }
+
+        async function fetchUiOwnerSuites() {
+            const uiOwnerSelect = document.getElementById('uiOwnerSelect');
+            const dateFilter = document.getElementById('uiOwnerDateFilter').value;
+            const envSelect = document.getElementById('uiOwnerEnvSelect');
+            const selectedOwner = uiOwnerSelect.value;
+            const selectedEnv = envSelect.value;
+
+            if (!selectedOwner) return;
+
+            // Map environment to project name
+            const projectMap = {
+                'staging': 'staging_suites',
+                'qa': 'qa_suites'
+            };
+            const projectName = projectMap[selectedEnv] || 'staging_suites';
+
+            // Show loading state
+            document.getElementById('uiOwnerEmptyState').classList.add('hidden');
+            document.getElementById('uiOwnerSuitesContainer').classList.add('hidden');
+            document.getElementById('uiOwnerLoadingState').classList.remove('hidden');
+
+            // Get suites for this owner from the UI mapping (deduplicated)
+            const ownerSuitesRaw = UI_OWNER_SUITE_MAPPING.filter(m => m.owner === selectedOwner);
+            const seenSuiteNames = new Set();
+            selectedUiOwnerSuites = ownerSuitesRaw.filter(m => {
+                const normalizedName = m.suite.toLowerCase();
+                if (seenSuiteNames.has(normalizedName)) {
+                    return false;
+                }
+                seenSuiteNames.add(normalizedName);
+                return true;
+            });
+            
+            console.log(`Fetching UI reports for owner: ${selectedOwner}, env: ${selectedEnv}, date: ${dateFilter || 'any'}`);
+            console.log(`Found ${selectedUiOwnerSuites.length} suites for UI owner`);
+
+            try {
+                // Fetch from ReportPortal for UI suites
+                const results = [];
+                
+                for (const suiteInfo of selectedUiOwnerSuites) {
+                    try {
+                        // Search for the suite in ReportPortal
+                        const searchName = `PLATFORM_UI_AUTOMATION_${suiteInfo.suite}`;
+                        
+                        // Build API URL with date filter if specified
+                        let apiUrl = `/api/v1/${projectName}/launch?filter.eq.name=${encodeURIComponent(searchName)}&page.size=10&page.sort=startTime,desc`;
+                        
+                        const response = await fetch(apiUrl);
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.content && data.content.length > 0) {
+                                // Find matching launch based on date filter
+                                let matchingLaunch = null;
+                                
+                                if (dateFilter) {
+                                    // Find launch matching the date (handle timezone properly)
+                                    for (const launch of data.content) {
+                                        const launchTime = new Date(launch.startTime);
+                                        // Format to YYYY-MM-DD in local timezone
+                                        const year = launchTime.getFullYear();
+                                        const month = String(launchTime.getMonth() + 1).padStart(2, '0');
+                                        const day = String(launchTime.getDate()).padStart(2, '0');
+                                        const launchDate = `${year}-${month}-${day}`;
+                                        if (launchDate === dateFilter) {
+                                            matchingLaunch = launch;
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    // Use latest launch
+                                    matchingLaunch = data.content[0];
+                                }
+                                
+                                if (matchingLaunch) {
+                                    results.push({
+                                        team: suiteInfo.team,
+                                        suite: suiteInfo.suite,
+                                        owner: suiteInfo.owner,
+                                        latestReport: {
+                                            id: matchingLaunch.id,
+                                            name: matchingLaunch.name,
+                                            status: matchingLaunch.status,
+                                            startTime: matchingLaunch.startTime,
+                                            statistics: matchingLaunch.statistics,
+                                            displayDate: new Date(matchingLaunch.startTime).toLocaleDateString('en-US', { 
+                                                month: 'short', day: '2-digit', year: 'numeric' 
+                                            })
+                                        }
+                                    });
+                                } else {
+                                    results.push({
+                                        team: suiteInfo.team,
+                                        suite: suiteInfo.suite,
+                                        owner: suiteInfo.owner,
+                                        latestReport: null
+                                    });
+                                }
+                            } else {
+                                results.push({
+                                    team: suiteInfo.team,
+                                    suite: suiteInfo.suite,
+                                    owner: suiteInfo.owner,
+                                    latestReport: null
+                                });
+                            }
+                        } else {
+                            results.push({
+                                team: suiteInfo.team,
+                                suite: suiteInfo.suite,
+                                owner: suiteInfo.owner,
+                                latestReport: null
+                            });
+                        }
+                    } catch (e) {
+                        results.push({
+                            team: suiteInfo.team,
+                            suite: suiteInfo.suite,
+                            owner: suiteInfo.owner,
+                            latestReport: null
+                        });
+                    }
+                }
+
+                uiOwnerSuiteResults = results;
+                renderUiOwnerSuites(results, selectedOwner, dateFilter);
+
+            } catch (e) {
+                console.error('Error fetching UI owner suites:', e);
+                document.getElementById('uiOwnerLoadingState').classList.add('hidden');
+                document.getElementById('uiOwnerEmptyState').classList.remove('hidden');
+            }
+        }
+
+        function renderUiOwnerSuites(results, ownerName, dateFilter) {
+            document.getElementById('uiOwnerLoadingState').classList.add('hidden');
+            document.getElementById('uiOwnerSuitesContainer').classList.remove('hidden');
+
+            // Update header
+            document.getElementById('selectedUiOwnerName').textContent = ownerName;
+            
+            // Calculate stats
+            const suitesWithReports = results.filter(r => r.latestReport);
+            
+            document.getElementById('selectedUiOwnerStats').textContent = 
+                dateFilter 
+                    ? `${suitesWithReports.length} suites with reports on ${dateFilter}`
+                    : `${results.length} assigned suites • ${suitesWithReports.length} with reports`;
+
+            document.getElementById('uiOwnerPassedCount').textContent = suitesWithReports.length;
+            document.getElementById('uiOwnerFailedCount').textContent = results.length - suitesWithReports.length;
+            document.getElementById('uiOwnerTotalCount').textContent = results.length;
+
+            // Render grid
+            const grid = document.getElementById('uiOwnerSuitesGrid');
+            
+            if (results.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-owner-suites" style="grid-column: 1 / -1;">
+                        <div class="no-owner-suites-icon">📭</div>
+                        <h4>No Suites Found</h4>
+                        <p>No UI test suites are assigned to this owner.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort: suites with reports first, then by team
+            const sortedResults = [...results].sort((a, b) => {
+                if (!a.latestReport && !b.latestReport) return a.team.localeCompare(b.team);
+                if (!a.latestReport) return 1;
+                if (!b.latestReport) return -1;
+                return 0;
+            });
+            
+            grid.innerHTML = sortedResults.map((result, index) => {
+                const hasReport = result.latestReport !== null;
+                const status = hasReport ? 'has-report' : 'no-runs';
+                const stats = result.latestReport?.statistics?.executions || {};
+                const passed = stats.passed || 0;
+                const failed = stats.failed || 0;
+                const total = stats.total || 0;
+                
+                return `
+                    <div class="owner-suite-card ${status}" 
+                         data-index="${index}"
+                         data-has-report="${hasReport}"
+                         data-launch-id="${result.latestReport?.id || ''}">
+                        <div class="owner-suite-card-header">
+                            <div class="owner-suite-name">
+                                <span class="suite-category">${result.team}</span>
+                                <span>${result.suite}</span>
+                            </div>
+                            <div class="owner-suite-status ${hasReport ? 'passed' : 'no-runs'}">
+                                ${hasReport ? '✅ Has Report' : 'No Reports'}
+                            </div>
+                        </div>
+                        ${hasReport ? `
+                            <div class="owner-suite-stats">
+                                <span style="color: var(--accent-cyan)">📅 ${result.latestReport.displayDate}</span>
+                                <span style="color: var(--accent-green)">✓ ${passed}</span>
+                                <span style="color: var(--accent-red)">✗ ${failed}</span>
+                            </div>
+                            <div class="owner-suite-meta">
+                                <span>Total: ${total}</span>
+                                <span>🔗 Click to view</span>
+                            </div>
+                        ` : `
+                            <div class="owner-suite-stats" style="color: var(--text-muted)">
+                                No reports found in ReportPortal
+                            </div>
+                            <div class="owner-suite-meta">
+                                <span style="color: var(--text-muted)">Suite: PLATFORM_UI_AUTOMATION_${result.suite}</span>
+                            </div>
+                        `}
+                    </div>
+                `;
+            }).join('');
+            
+            // Add click handlers to suite cards
+            grid.querySelectorAll('.owner-suite-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const hasReport = card.dataset.hasReport === 'true';
+                    const launchId = card.dataset.launchId;
+                    
+                    if (hasReport && launchId) {
+                        // Open ReportPortal in a new tab
+                        const reportUrl = `https://reportportal.qa.staging.integrator.io/ui/#staging_suites/launches/all/${launchId}`;
+                        window.open(reportUrl, '_blank');
+                    }
+                });
+            });
+        }
+
+
         async function showOwnerSuiteDetail(result) {
             if (!result.launch) {
                 // No launch data, nothing to show
@@ -3014,6 +3495,11 @@
                     
                     if (btn.dataset.tab === 'owner' && !ownerTabInitialized) {
                         initOwnerTab();
+                    }
+                    
+                    // Initialize UI Owner Suites on first view
+                    if (btn.dataset.tab === 'uiowner' && !uiOwnerTabInitialized) {
+                        initUiOwnerSuitesTab();
                     }
                 });
             });
