@@ -2914,6 +2914,58 @@
                     }
                 }
                 
+                // Helper function to fetch report statistics from Jest HTML report
+                const statsCache = new Map();
+                async function getReportStats(suitePath) {
+                    if (statsCache.has(suitePath)) {
+                        return statsCache.get(suitePath);
+                    }
+                    
+                    try {
+                        // Fetch the index.html report directly
+                        const reportUrl = `${REST_REPORTS_CONFIG.baseUrl}${suitePath}/index.html`;
+                        const response = await fetch(reportUrl);
+                        if (!response.ok) {
+                            statsCache.set(suitePath, null);
+                            return null;
+                        }
+                        const html = await response.text();
+                        
+                        // Parse Jest HTML report format:
+                        // <div id="test-summary"><div class="summary-total">Tests (49)</div>
+                        // <div class="summary-passed">36 passed</div>
+                        // <div class="summary-failed">13 failed</div>
+                        // Look specifically in the test-summary section to avoid suite-summary
+                        const testSummaryMatch = html.match(/id="test-summary"[^]*?<\/div>\s*<\/div>/i);
+                        const testSummary = testSummaryMatch ? testSummaryMatch[0] : html;
+                        
+                        const totalMatch = testSummary.match(/summary-total[^>]*>Tests\s*\((\d+)\)/i);
+                        const passedMatch = testSummary.match(/summary-passed[^>]*>(\d+)\s*passed/i);
+                        const failedMatch = testSummary.match(/summary-failed[^>]*>(\d+)\s*failed/i);
+                        
+                        if (totalMatch || passedMatch || failedMatch) {
+                            const stats = {
+                                total: totalMatch ? parseInt(totalMatch[1]) : 0,
+                                passed: passedMatch ? parseInt(passedMatch[1]) : 0,
+                                failed: failedMatch ? parseInt(failedMatch[1]) : 0
+                            };
+                            // If total is 0, calculate from passed + failed
+                            if (stats.total === 0) {
+                                stats.total = stats.passed + stats.failed;
+                            }
+                            statsCache.set(suitePath, stats);
+                            return stats;
+                        }
+                        
+                        statsCache.set(suitePath, null);
+                        return null;
+                    } catch (e) {
+                        console.log(`Failed to fetch stats for ${suitePath}:`, e.message);
+                        statsCache.set(suitePath, null);
+                        return null;
+                    }
+                }
+                
                 // OPTIMIZATION: Pre-fetch all unique category folders in parallel
                 const uniqueCategories = [...new Set(selectedOwnerSuites.map(s => s.category))];
                 const hasSearchAllSuites = selectedOwnerSuites.some(s => 
@@ -2957,10 +3009,13 @@
                                     );
                                     
                                     if (matchingSuite) {
+                                        const suitePath = `${folder.path}/${matchingSuite}`;
+                                        const stats = await getReportStats(suitePath);
                                         validReportFolders.push({
                                             ...folder,
-                                            suitePath: `${folder.path}/${matchingSuite}`,
-                                            foundCategory: searchCategory
+                                            suitePath: suitePath,
+                                            foundCategory: searchCategory,
+                                            stats: stats
                                         });
                                         foundInCategory = searchCategory;
                                     }
@@ -3169,6 +3224,13 @@
                                 <span style="color: var(--accent-cyan)">📅 ${result.latestReport.displayDate || 'Recent'}</span>
                                 ${foundInDifferentFolder ? `<span style="color: var(--accent-purple)">📁 Found in: ${actualCategory}</span>` : ''}
                             </div>
+                            ${result.latestReport.stats ? `
+                            <div class="owner-suite-stats" style="margin-top: 0.5rem;">
+                                <span class="passed">✓ ${result.latestReport.stats.passed}</span>
+                                <span class="failed">✗ ${result.latestReport.stats.failed}</span>
+                                <span class="total">Total: ${result.latestReport.stats.total}</span>
+                            </div>
+                            ` : ''}
                             <div class="owner-suite-meta">
                                 <span>📂 ${selectedEnv}</span>
                                 <span>🔗 Click to view</span>
@@ -3232,7 +3294,7 @@
                         <h4 style="margin-bottom: 1rem; color: var(--accent-cyan);">📁 Available Reports (${result.reportFolders.length})</h4>
                         <div class="reports-grid">
                             ${result.reportFolders.map(folder => `
-                                <div class="report-card-mini passed" style="cursor: pointer;" 
+                                <div class="report-card-mini ${folder.stats && folder.stats.failed > 0 ? 'failed' : 'passed'}" style="cursor: pointer;" 
                                      onclick="window.open('https://portal_user:celigo%40123@reporting-portal.qa.staging.integrator.io${folder.suitePath}/index.html', '_blank')">
                                     <div class="report-card-mini-header">
                                         <div class="report-card-mini-title">
@@ -3242,6 +3304,13 @@
                                                 onclick="copyReportLink('https://portal_user:celigo%40123@reporting-portal.qa.staging.integrator.io${folder.suitePath}/index.html', event)"
                                                 title="Copy Report Link">📋</button>
                                     </div>
+                                    ${folder.stats ? `
+                                    <div class="report-card-mini-stats">
+                                        <span class="passed">✓ ${folder.stats.passed}</span>
+                                        <span class="failed">✗ ${folder.stats.failed}</span>
+                                        <span style="color: var(--text-secondary)">Total: ${folder.stats.total}</span>
+                                    </div>
+                                    ` : ''}
                                     <div class="report-card-mini-meta">
                                         <span>${folder.name}</span>
                                     </div>
