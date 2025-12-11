@@ -3514,7 +3514,7 @@
                 }
 
                 uiOwnerSuiteResults = results;
-                renderUiOwnerSuites(results, selectedOwner, dateFilter);
+                renderUiOwnerSuites(results, selectedOwner, dateFilter, projectName);
 
             } catch (e) {
                 console.error('Error fetching UI owner suites:', e);
@@ -3523,7 +3523,7 @@
             }
         }
 
-        function renderUiOwnerSuites(results, ownerName, dateFilter) {
+        function renderUiOwnerSuites(results, ownerName, dateFilter, projectName = 'staging_suites') {
             document.getElementById('uiOwnerLoadingState').classList.add('hidden');
             document.getElementById('uiOwnerSuitesContainer').classList.remove('hidden');
 
@@ -3596,13 +3596,13 @@
                                 <span>Total: ${total}</span>
                                 <span>🔗 Click to view</span>
                                 <div class="report-action-buttons">
-                                    <a href="https://reportportal.qa.staging.integrator.io/ui/#staging_suites/launches/all/${result.latestReport?.id || ''}" 
+                                    <a href="https://reportportal.qa.staging.integrator.io/ui/#${projectName}/launches/all/${result.latestReport?.id || ''}" 
                                        target="_blank" 
                                        class="direct-report-link"
                                        onclick="event.stopPropagation();"
                                        title="Open Report Directly">🔗</a>
                                     <button class="copy-link-btn"
-                                            onclick="copyReportLink('https://reportportal.qa.staging.integrator.io/ui/#staging_suites/launches/all/${result.latestReport?.id || ''}', event)"
+                                            onclick="copyReportLink('https://reportportal.qa.staging.integrator.io/ui/#${projectName}/launches/all/${result.latestReport?.id || ''}', event)"
                                             title="Copy Report Link">📋</button>
                                 </div>
                             </div>
@@ -3626,7 +3626,7 @@
                     
                     if (hasReport && launchId) {
                         // Open ReportPortal in a new tab
-                        const reportUrl = `https://reportportal.qa.staging.integrator.io/ui/#staging_suites/launches/all/${launchId}`;
+                        const reportUrl = `https://reportportal.qa.staging.integrator.io/ui/#${projectName}/launches/all/${launchId}`;
                         window.open(reportUrl, '_blank');
                     }
                 });
