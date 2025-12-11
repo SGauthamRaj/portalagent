@@ -559,6 +559,21 @@
             color: var(--text-secondary);
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .report-card-mini-meta .copy-link-btn {
+            width: 24px;
+            height: 24px;
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        .report-card-mini-header .copy-link-btn {
+            width: 24px;
+            height: 24px;
+            font-size: 0.75rem;
         }
 
         .no-results-message {
@@ -1128,6 +1143,63 @@
             box-shadow: var(--glow-cyan);
         }
 
+        .copy-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: rgba(138, 43, 226, 0.15);
+            border: 1px solid var(--accent-purple);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-left: 6px;
+        }
+
+        .copy-link-btn:hover {
+            background: rgba(138, 43, 226, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+        }
+
+        .copy-link-btn.copied {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: var(--accent-green);
+        }
+
+        .report-action-buttons {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            gap: 4px;
+        }
+
+        /* Toast notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.9), rgba(0, 200, 100, 0.9));
+            color: #000;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 10000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .owner-suite-card {
             cursor: pointer;
         }
@@ -1459,6 +1531,59 @@
             RP_DIRECT: 'https://reportportal.qa.staging.integrator.io'
         };
 
+        // Copy report link to clipboard
+        function copyReportLink(url, event) {
+            event.stopPropagation();
+            
+            // Capture button reference before async operation
+            const btn = event.currentTarget || event.target;
+            
+            // Remove auth credentials from URL for sharing
+            const cleanUrl = url.replace('portal_user:celigo%40123@', '');
+            
+            navigator.clipboard.writeText(cleanUrl).then(() => {
+                showToast('📋 Link copied to clipboard!');
+                
+                // Visual feedback on button
+                if (btn) {
+                    btn.classList.add('copied');
+                    btn.innerHTML = '✓';
+                    setTimeout(() => {
+                        btn.classList.remove('copied');
+                        btn.innerHTML = '📋';
+                    }, 1500);
+                }
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                showToast('❌ Failed to copy link');
+            });
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            // Remove existing toast if any
+            const existingToast = document.querySelector('.toast-notification');
+            if (existingToast) {
+                existingToast.remove();
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // Trigger animation
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+            
+            // Remove after delay
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
         let allSuites = [];
         let currentProject = 'staging_suites';
         
@@ -1785,6 +1910,9 @@
                             <span>🕐 ${time}</span>
                             <span>⏱️ ${duration}m</span>
                             <span>👤 ${launch.owner || 'Unknown'}</span>
+                            <button class="copy-link-btn"
+                                    onclick="copyReportLink('https://reportportal.qa.staging.integrator.io/ui/#${CONFIG.RP_PROJECT}/launches/all/${launch.id}', event)"
+                                    title="Copy Report Link">📋</button>
                         </div>
                     </div>
                 `;
@@ -3044,11 +3172,16 @@
                             <div class="owner-suite-meta">
                                 <span>📂 ${selectedEnv}</span>
                                 <span>🔗 Click to view</span>
-                                <a href="https://portal_user:celigo%40123@reporting-portal.qa.staging.integrator.io${result.latestReport.suitePath}/index.html" 
-                                   target="_blank" 
-                                   class="direct-report-link"
-                                   onclick="event.stopPropagation();"
-                                   title="Open Report Directly">🔗</a>
+                                <div class="report-action-buttons">
+                                    <a href="https://portal_user:celigo%40123@reporting-portal.qa.staging.integrator.io${result.latestReport.suitePath}/index.html" 
+                                       target="_blank" 
+                                       class="direct-report-link"
+                                       onclick="event.stopPropagation();"
+                                       title="Open Report Directly">🔗</a>
+                                    <button class="copy-link-btn"
+                                            onclick="copyReportLink('https://portal_user:celigo%40123@reporting-portal.qa.staging.integrator.io${result.latestReport.suitePath}/index.html', event)"
+                                            title="Copy Report Link">📋</button>
+                                </div>
                             </div>
                         ` : `
                             <div class="owner-suite-stats" style="color: var(--text-muted)">
@@ -3105,6 +3238,9 @@
                                         <div class="report-card-mini-title">
                                             <span>📅 ${folder.displayDate || 'Report'}</span>
                                         </div>
+                                        <button class="copy-link-btn"
+                                                onclick="copyReportLink('https://portal_user:celigo%40123@reporting-portal.qa.staging.integrator.io${folder.suitePath}/index.html', event)"
+                                                title="Copy Report Link">📋</button>
                                     </div>
                                     <div class="report-card-mini-meta">
                                         <span>${folder.name}</span>
@@ -3390,6 +3526,16 @@
                             <div class="owner-suite-meta">
                                 <span>Total: ${total}</span>
                                 <span>🔗 Click to view</span>
+                                <div class="report-action-buttons">
+                                    <a href="https://reportportal.qa.staging.integrator.io/ui/#staging_suites/launches/all/${result.latestReport?.id || ''}" 
+                                       target="_blank" 
+                                       class="direct-report-link"
+                                       onclick="event.stopPropagation();"
+                                       title="Open Report Directly">🔗</a>
+                                    <button class="copy-link-btn"
+                                            onclick="copyReportLink('https://reportportal.qa.staging.integrator.io/ui/#staging_suites/launches/all/${result.latestReport?.id || ''}', event)"
+                                            title="Copy Report Link">📋</button>
+                                </div>
                             </div>
                         ` : `
                             <div class="owner-suite-stats" style="color: var(--text-muted)">
