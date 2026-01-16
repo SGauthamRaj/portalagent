@@ -81,7 +81,11 @@ function proxyToReportPortal(apiPath, res) {
         proxyRes.on('end', () => {
             res.writeHead(proxyRes.statusCode, {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'X-Content-Type-Options': 'nosniff',
+                'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
             });
             res.end(data);
         });
@@ -148,12 +152,23 @@ const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     let pathname = parsedUrl.pathname;
 
+    // Security Headers - Prevent credential exposure and attacks
+    const securityHeaders = {
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'X-XSS-Protection': '1; mode=block',
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': 'geolocation=(), microphone=(), camera=()'
+    };
+
     // Handle CORS preflight
     if (req.method === 'OPTIONS') {
         res.writeHead(204, {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            ...securityHeaders
         });
         res.end();
         return;
@@ -171,6 +186,32 @@ const server = http.createServer((req, res) => {
         // Remove the /rest-reports prefix and proxy to the portal
         const restPath = pathname.replace('/rest-reports', '') + (parsedUrl.search || '');
         proxyToRestReports(restPath || '/', res);
+        return;
+    }
+
+    // Generate authenticated report URL (server-side only)
+    if (pathname === '/api/generate-report-url') {
+        const reportPath = parsedUrl.query.path || '';
+        
+        if (!REST_REPORTS_CONFIG.host || !REST_REPORTS_CONFIG.username || !REST_REPORTS_CONFIG.password) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'REST Reports credentials not configured' }));
+            return;
+        }
+
+        // Generate authenticated URL with credentials
+        const encodedPassword = encodeURIComponent(REST_REPORTS_CONFIG.password);
+        const authUrl = `https://${REST_REPORTS_CONFIG.username}:${encodedPassword}@${REST_REPORTS_CONFIG.host}${reportPath}`;
+        
+        res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'X-Content-Type-Options': 'nosniff',
+            'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        });
+        res.end(JSON.stringify({ url: authUrl }));
         return;
     }
 
@@ -193,7 +234,12 @@ const server = http.createServer((req, res) => {
                 res.end('Server Error');
             }
         } else {
-            res.writeHead(200, { 'Content-Type': contentType });
+            res.writeHead(200, { 
+                'Content-Type': contentType,
+                'X-Content-Type-Options': 'nosniff',
+                'X-Frame-Options': 'DENY',
+                'X-XSS-Protection': '1; mode=block'
+            });
             res.end(content);
         }
     });
