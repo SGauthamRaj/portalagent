@@ -35,10 +35,18 @@ nano .env
 
 Set these values in `.env`:
 ```
+# ReportPortal API Configuration
 RP_HOST=your-reportportal-host.com
 RP_TOKEN=your-api-token
 RP_PROJECT=your-project-name
+
+# REST API Reports Portal (Basic Auth)
+REST_REPORTS_HOST=reporting-portal.qa.staging.integrator.io
+REST_REPORTS_USER=your-username
+REST_REPORTS_PASS=your-password
 ```
+
+**⚠️ Security Note:** Never commit your `.env` file! It should already be in `.gitignore`.
 
 ### 3. Start the Server
 
@@ -62,6 +70,9 @@ http://localhost:8080
    - `RP_HOST`
    - `RP_TOKEN`
    - `RP_PROJECT`
+   - `REST_REPORTS_HOST`
+   - `REST_REPORTS_USER`
+   - `REST_REPORTS_PASS`
 4. Deploy!
 
 ### Deploy to Render
@@ -89,6 +100,9 @@ railway up
 | `RP_HOST` | ReportPortal server hostname | Yes |
 | `RP_TOKEN` | API Bearer Token | Yes |
 | `RP_PROJECT` | Project name in ReportPortal | Yes |
+| `REST_REPORTS_HOST` | REST API Reports Portal hostname | Yes |
+| `REST_REPORTS_USER` | REST Reports username | Yes |
+| `REST_REPORTS_PASS` | REST Reports password | Yes |
 | `PORT` | Server port | No (default: 8080) |
 
 ### Getting Your API Token
@@ -103,13 +117,16 @@ railway up
 
 ```
 portalagent/
-├── index.html      # Main UI (single page app)
-├── server.js       # Node.js proxy server
-├── package.json    # Project metadata
-├── vercel.json     # Vercel deployment config
-├── env.example     # Example environment config
-├── .gitignore      # Git ignore rules
-└── README.md       # This file
+├── index.html           # Main UI (single page app)
+├── live-dashboard.html  # Live dashboard for REST reports
+├── server.js            # Node.js proxy server
+├── package.json         # Project metadata
+├── vercel.json          # Vercel deployment config
+├── env.example          # Example environment config
+├── .env                 # Your credentials (DO NOT COMMIT!)
+├── .gitignore           # Git ignore rules
+├── SECURITY.md          # Security best practices
+└── README.md            # This file
 ```
 
 ## 🖥️ Usage
@@ -128,10 +145,16 @@ portalagent/
 
 ## 🔒 Security
 
-- API tokens are stored server-side only
-- No credentials exposed to the browser
-- CORS handled by proxy server
-- SSL/TLS for ReportPortal communication
+**All credentials are stored server-side only!** ✅
+
+- ✅ **Server-side credential storage** - Credentials never sent to client
+- ✅ **Dynamic URL generation** - Authenticated URLs created on-demand via API endpoint
+- ✅ **Environment-based config** - Easy credential management via `.env` file
+- ✅ **No client-side secrets** - Clean separation of concerns
+- ✅ **CORS handled by proxy** - Secure cross-origin requests
+- ✅ **SSL/TLS communication** - Encrypted connections to ReportPortal
+
+**📖 See [SECURITY.md](./SECURITY.md) for detailed security practices and deployment guidelines.**
 
 ## 🤝 Contributing
 
